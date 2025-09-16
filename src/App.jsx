@@ -5,13 +5,15 @@ function App() {
   
   return (
     <>
-      <Navigation />
-      
+      <Navigation />  
+       
     <main> 
+      
       <HeroSection />
+     
     </main>
     </>
   );
 }
 
-export default App
+export default App;
