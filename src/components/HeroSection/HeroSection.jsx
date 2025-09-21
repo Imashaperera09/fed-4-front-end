@@ -77,13 +77,13 @@ export default function HeroSection() {
               <h2 className="text-2xl font-bold mb-2">Solar Energy Production</h2>
               <p className="text-gray-600 mb-6">Daily energy output for the past 7 days</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
-                <EnergyProductionCard day="Mon" date="Sep 09" production="45.2" />
-                <EnergyProductionCard day="Tue" date="Sep 10" production="38.7" />
-                <EnergyProductionCard day="Wed" date="Sep 11" production="52.3" />
-                <EnergyProductionCard day="Thu" date="Sep 12" production="29.6" />
-                <EnergyProductionCard day="Fri" date="Sep 13" production="47.8" />
-                <EnergyProductionCard day="Sat" date="Sep 14" production="51.1" />
-                <EnergyProductionCard day="Sun" date="Sep 15" production="33.4" />
+                <EnergyProductionCard day="Mon" date="Aug 18" production="34.1" />
+                <EnergyProductionCard day="Tue" date="Aug 19" production="3.2" hasAnomaly={true} />
+                <EnergyProductionCard day="Wed" date="Aug 20" production="44.7" />
+                <EnergyProductionCard day="Thu" date="Aug 21" production="21.9" />
+                <EnergyProductionCard day="Fri" date="Aug 22" production="47.2" />
+                <EnergyProductionCard day="Sat" date="Aug 23" production="43" />
+                <EnergyProductionCard day="Sun" date="Aug 24" production="26.8" />
               </div>
             </div>
           </div>
