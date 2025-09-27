@@ -1,18 +1,13 @@
 import Navigation from "./components/Navigation/Navigation";
 import HeroSection from "./components/HeroSection/HeroSection";
-import SolarEnergyProduction from "./components/SolarEnergyProduction";
 
 function App() {
   
   return (
     <>
-      <Navigation />  
-       
+      <Navigation />   
     <main> 
-      
       <HeroSection />
-      <SolarEnergyProduction />
-     
     </main>
     </>
   );
