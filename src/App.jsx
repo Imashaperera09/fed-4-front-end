@@ -1,5 +1,7 @@
 import Navigation from "./components/Navigation/Navigation";
 import HeroSection from "./components/HeroSection/HeroSection";
+import UserProfile from "./components/UserProfile/UserProfile";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   
@@ -9,6 +11,8 @@ function App() {
     <main> 
       <HeroSection />
     </main>
+    <UserProfile />
+    <Footer />
     </>
   );
 }

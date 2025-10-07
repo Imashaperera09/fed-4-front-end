@@ -41,7 +41,7 @@ const Navigation = () => {
               <path d="M13 17V5"/>
               <path d="M8 17v-3"/>
             </svg>
-            <span className="font-['Inter'] text-sm font-medium">Dashboard</span>
+            <a href="./dashboard.html" className="font-['Inter'] text-sm font-medium">Dashboard</a>
         </div>
         
         <div className={"flex items-center gap-4"}>
