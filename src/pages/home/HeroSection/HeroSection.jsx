@@ -1,6 +1,6 @@
-// import imgWindTurbine from "./wind-turbine.png"; // Image file not found
+import imgWindTurbine from "./wind-turbine.png";
 import { Sailboat, Shield, Triangle, Wind } from "lucide-react";
-import EnergyProductionCard from "../../pages/home/EnergyProductionCard";
+import EnergyProductionCard from "../EnergyProductionCard";
 import { useState } from "react";
 
 export default function HeroSection() {
@@ -78,9 +78,11 @@ export default function HeroSection() {
               <div className="flex flex-row items-center gap-4 sm:gap-8">
                 <span>Solar Energy</span>
                 <div className="relative">
-                  <div className="max-h-8 rounded-xl bg-gray-300 flex items-center justify-center sm:max-h-16 md:max-h-20 md:rounded-2xl w-16 h-8 sm:w-24 sm:h-16 md:w-28 md:h-20">
-                    <Wind className="h-4 w-4 text-gray-600 sm:h-6 sm:w-6 md:h-8 md:w-8" />
-                  </div>
+                  <img
+                    src={imgWindTurbine}
+                    alt="Solar panels on a house roof"
+                    className="max-h-8 rounded-xl object-cover sm:max-h-16 md:max-h-20 md:rounded-2xl"
+                  />
                 </div>
               </div>
               <div className="flex items-center gap-4 sm:gap-8">

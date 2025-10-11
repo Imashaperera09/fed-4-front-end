@@ -1,4 +1,5 @@
 import EnergyProductionCard from "./EnergyProductionCard";
+import Tab from "./Tab";
 import { useState } from "react";
 
 

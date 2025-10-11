@@ -1,7 +1,7 @@
 import Navigation from "./components/Navigation/Navigation";
-import HeroSection from "./components/HeroSection/HeroSection";
+import HeroSection from "./pages/home/HeroSection/HeroSection";
 import UserProfile from "./components/UserProfile/UserProfile";
-import Footer from "./components/Footer/Footer";
+import Footer from "./pages/home/Footer/Footer";
 
 function App() {
   
