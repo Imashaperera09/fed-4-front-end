@@ -4,7 +4,7 @@ const DashboardPage = () => {
   return (
     <div>
       <Navigation />
-      <main>
+      <main className="px-12">
         <h1>Dashboard</h1>
       </main>
     </div>

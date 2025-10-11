@@ -1,4 +1,5 @@
 import s from "./Navigation.module.css";
+import { Link } from "react-router";
 
 const Navigation = () => {
 
@@ -6,7 +7,7 @@ const Navigation = () => {
 
   return (
   <nav className={"px-12 py-6 flex justify-between items-center " + s.nav}>
-    <div className={"flex items-center gap-3"}>
+    <Link to="/" className={"flex items-center gap-3"}>
     <div className={"w-10 h-10 rounded-full bg-green-400 flex justify-center items-center "}>
         <svg xmlns="http://www.w3.org/2000/svg" 
         width="24" 
@@ -25,10 +26,10 @@ const Navigation = () => {
     </div>
       <span className="font-['Inter'] text-xl
       font-semibold">Aelora</span>
-    </div>
+    </Link>
 
     <div className={"flex items-center gap-12"}>
-        <div className={"flex items-center gap-2 px-4 py-2"}>
+        <Link to="/dashboard" className={"flex items-center gap-2 px-4 py-2"}>
             <svg xmlns="http://www.w3.org/2000/svg"
              width="24" height="24" viewBox="0 0 24 24" 
              fill="none" stroke="currentColor" 
@@ -41,8 +42,8 @@ const Navigation = () => {
               <path d="M13 17V5"/>
               <path d="M8 17v-3"/>
             </svg>
-            <a href="./dashboard.html" className="font-['Inter'] text-sm font-medium">Dashboard</a>
-        </div>
+            <span className="font-['Inter'] text-sm font-medium">Dashboard</span>
+        </Link>
         
         <div className={"flex items-center gap-4"}>
             <div className={"flex items-center gap-2"}>
