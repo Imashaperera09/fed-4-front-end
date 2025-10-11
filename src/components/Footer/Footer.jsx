@@ -122,7 +122,7 @@ const Footer = () => {
               <a href="#" className="text-sm text-gray-500 hover:text-gray-700">Cookie Policy</a>
               <a href="#" className="text-sm text-gray-500 hover:text-gray-700">Accessibility</a>
             </div>
-            <p className="text-sm text-gray-500">© 2025 Smart Energy. All rights reserved.</p>
+            <p className="text-sm text-gray-500">© 2026 Smart Energy. All rights reserved.</p>
           </div>
         </div>
       </div>
