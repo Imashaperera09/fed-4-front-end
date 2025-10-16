@@ -1,6 +1,6 @@
 // import imgWindTurbine from "./wind-turbine.png"; // Image file not found
 import { Sailboat, Shield, Triangle, Wind } from "lucide-react";
-import EnergyProductionCard from "../../pages/home/EnergyProductionCard";
+import EnergyProductionCard from "../../pages/home/components/EnergyProductionCard";
 import { useState } from "react";
 
 export default function HeroSection() {
