@@ -37,7 +37,7 @@ const SolarEnergyProduction = () => {
   });
 
   const { data, isLoading } =
-    useGetEnergyGenerationRecordsBySolarUnitQuery("68e28831fe732ccfcd426e71");
+    useGetEnergyGenerationRecordsBySolarUnitQuery("68f27e4735af464f48833c71");
 
   console.log(data, isLoading);
 
