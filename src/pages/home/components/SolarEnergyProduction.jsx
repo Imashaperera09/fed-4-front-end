@@ -2,18 +2,10 @@ import { useSelector } from "react-redux";
 import EnergyProductionCards from "./EnergyProductionCards";
 import Tab from "./Tab";
 import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
+import { format } from "date-fns";
+import { toDate } from "date-fns";
 
 const SolarEnergyProduction = () => {
-  const energyProductionData = [
-    { day: "Mon", date: "Aug 18", production: 34.1, hasAnomaly: false },
-    { day: "Tue", date: "Aug 19", production: 3.2, hasAnomaly: true },
-    { day: "Wed", date: "Aug 20", production: 44.7, hasAnomaly: false },
-    { day: "Thu", date: "Aug 21", production: 21.9, hasAnomaly: false },
-    { day: "Fri", date: "Aug 22", production: 0, hasAnomaly: true },
-    { day: "Sat", date: "Aug 23", production: 43, hasAnomaly: false },
-    { day: "Sun", date: "Aug 24", production: 26.8, hasAnomaly: false },
-  ];
-
   const tabs = [
     { label: "All", value: "all" },
     { label: "Anomaly", value: "anomaly" },
@@ -21,14 +13,30 @@ const SolarEnergyProduction = () => {
 
   const selectedTab = useSelector((state) => state.ui.selectedHomeTab);
 
-  // const filteredEnergyProductionData =
-  // selectedTab === "all"
-  //   ? energyProductionData
-  //   : selectedTab === "anomaly"
-  //   ? energyProductionData.filter((el) => el.hasAnomaly)
-  //   : [];
+  const { data, isLoading, isError, error } =
+    useGetEnergyGenerationRecordsBySolarUnitQuery({
+      id:"68f27e4735af464f48833c71",
+      groupBy: "date",
+    });
 
-  const filteredEnergyProductionData = energyProductionData.filter((el) => {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!data || isError) {
+    return <div>Error: {error?.message || "Something went wrong"}</div>;
+  }
+
+  const newEnergyProductionData = data.slice(0, 7).map((el) => {
+    return {
+      day: format(toDate(el._id.date), "EEE"),
+      date: format(toDate(el._id.date), "MMM d"),
+      production: el.totalEnergy,
+      hasAnomaly: false,
+    };
+  });
+
+  const filteredEnergyProductionData = newEnergyProductionData.filter((el) => {
     if (selectedTab === "all") {
       return true;
     } else if (selectedTab === "anomaly") {
@@ -36,10 +44,7 @@ const SolarEnergyProduction = () => {
     }
   });
 
-  const { data, isLoading } =
-    useGetEnergyGenerationRecordsBySolarUnitQuery("68f27e4735af464f48833c71");
-
-  console.log(data, isLoading);
+  console.log(filteredEnergyProductionData);
 
   return (
     <section className="px-12 font-[Inter] py-6">
