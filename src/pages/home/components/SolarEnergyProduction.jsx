@@ -29,7 +29,7 @@ const SolarEnergyProduction = () => {
       day: format(toDate(el._id.date), "EEE"),
       date: format(toDate(el._id.date), "MMM d"),
       production: el.totalEnergy,
-      hasAnomaly: false, // detect anomalies
+      hasAnomaly: false, // Explicitly set to false to remove red styling
     };
   });
 
