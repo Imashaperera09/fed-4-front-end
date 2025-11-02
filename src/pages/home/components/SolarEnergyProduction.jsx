@@ -14,10 +14,7 @@ const SolarEnergyProduction = () => {
   const selectedTab = useSelector((state) => state.ui.selectedHomeTab);
 
   const { data, isLoading, isError, error } =
-    useGetEnergyGenerationRecordsBySolarUnitQuery({
-      id:"68f27e4735af464f48833c71",
-      groupBy: "date",
-    });
+    useGetEnergyGenerationRecordsBySolarUnitQuery({id:"68f27e4735af464f48833c71", groupBy: "date"});
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -32,7 +29,7 @@ const SolarEnergyProduction = () => {
       day: format(toDate(el._id.date), "EEE"),
       date: format(toDate(el._id.date), "MMM d"),
       production: el.totalEnergy,
-      hasAnomaly: false,
+      hasAnomaly: false, // detect anomalies
     };
   });
 
