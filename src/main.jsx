@@ -8,6 +8,7 @@ import HomePage from './pages/home/home.page.jsx'
 import DashboardPage from './pages/dashboard/dashboard.page.jsx'
 import RootLayout from './layouts/rootLayout.jsx'
 import MainLayout from './layouts/main.layout.jsx'
+import DashboardLayout from './layouts/dashboard.layout.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,9 +16,11 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route element={<RootLayout />}>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+          </Route>
         </Route>
+        <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Routes>
