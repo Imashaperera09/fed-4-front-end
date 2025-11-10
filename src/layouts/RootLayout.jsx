@@ -5,7 +5,7 @@ import Footer from '../pages/home/Footer/Footer';
 const RootLayout = () => {
   return (
     <>
-      <Navigation />
+      
       <Outlet />
       <Footer />
     </>
