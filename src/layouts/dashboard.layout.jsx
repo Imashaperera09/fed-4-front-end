@@ -6,15 +6,12 @@ export default function DashboardLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex-1 bg-white">
-        <div className="p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <SidebarTrigger />
-            <h1 className="text-2xl font-semibold text-gray-900">Alice's House</h1>
-          </div>
-          <Outlet />
-        </div>
+      <main className="p-4 w-full bg-slate-200">
+        <SidebarTrigger className="w-8 h-8 block" size={32} />
+        <Outlet />
       </main>
     </SidebarProvider>
   );
 }
+
+  
