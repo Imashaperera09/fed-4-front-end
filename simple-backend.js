@@ -15,13 +15,13 @@ const mockData = {
     }
   },
   energyRecords: [
-    { date: "2024-11-16", energy: 25.5, unit: "kWh" },
-    { date: "2024-11-15", energy: 28.3, unit: "kWh" },
-    { date: "2024-11-14", energy: 22.1, unit: "kWh" },
-    { date: "2024-11-13", energy: 30.2, unit: "kWh" },
-    { date: "2024-11-12", energy: 26.7, unit: "kWh" },
-    { date: "2024-11-11", energy: 31.5, unit: "kWh" },
-    { date: "2024-11-10", energy: 29.8, unit: "kWh" }
+    { date: "2024-11-16", energy: 567, unit: "kWh" },
+    { date: "2024-11-15", energy: 672, unit: "kWh" },
+    { date: "2024-11-14", energy: 543, unit: "kWh" },
+    { date: "2024-11-13", energy: 612, unit: "kWh" },
+    { date: "2024-11-12", energy: 589, unit: "kWh" },
+    { date: "2024-11-11", energy: 634, unit: "kWh" },
+    { date: "2024-11-10", energy: 598, unit: "kWh" }
   ]
 };
 

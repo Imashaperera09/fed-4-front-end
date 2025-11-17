@@ -1,85 +1,113 @@
-import { ChartLine, LayoutDashboard, TriangleAlert, Home, Inbox, Calendar, Search, Settings } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { ChartLine, LayoutDashboard, TriangleAlert, Users, Wind } from "lucide-react";
+import { Link } from "react-router";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarContext,
-} from "./ui/sidebar";
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenuBadge,
+} from "@/components/ui/sidebar";
+import { useLocation } from "react-router";
 
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
     title: "Dashboard",
     url: "/dashboard",
-    icon: LayoutDashboard,
+    icon: <LayoutDashboard className="w-4 h-4" />,
   },
   {
-    title: "Inbox",
-    url: "/inbox",
-    icon: Inbox,
+    title: "Anomaly",
+    url: "/dashboard/anomaly",
+    icon: <TriangleAlert className="w-4 h-4" />,
   },
   {
-    title: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
+    title: "Analytics",
+    url: "/dashboard/analytics",
+    icon: <ChartLine className="w-4 h-4" />,
+    badge: "NEW",
   },
   {
-    title: "Search",
-    url: "/search",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
+    title: "Users",
+    url: "/users",
+    icon: <Users className="w-4 h-4" />,
+    badge: "NEW",
   },
 ];
 
-function SidebarMenuItem_({ item, isOpen }) {
+const SideBarTab = ({ item }) => {
+  let location = useLocation();
+  let isActive = location.pathname === item.url;
+
   return (
-    <SidebarMenuItem>
-      <SidebarMenuButton asChild>
-        <Link to={item.url} className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 group">
-          <item.icon className="w-5 h-5 flex-shrink-0" />
-          {isOpen && <span className="text-sm font-medium">{item.title}</span>}
+    <SidebarMenuItem key={item.url}>
+      <SidebarMenuButton 
+        asChild 
+        isActive={isActive}
+        className={`
+          relative w-full justify-start text-sm font-medium transition-colors rounded-md
+          ${isActive 
+            ? 'bg-blue-50 text-blue-700 hover:bg-blue-50' 
+            : 'text-gray-700 hover:bg-gray-100'
+          }
+        `}
+      >
+        <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
+          {item.icon}
+          <span>{item.title}</span>
+          {item.badge && (
+            <SidebarMenuBadge className="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-0.5 rounded-full font-medium">
+              {item.badge}
+            </SidebarMenuBadge>
+          )}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
-}
+};
 
 export function AppSidebar() {
-  const context = useContext(SidebarContext);
-  const isOpen = context?.isOpen !== false; // Default to true if context is not available
-  
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="w-64 border-r border-gray-200 bg-white">
+      <SidebarHeader className="h-16 border-b border-gray-100 flex items-center px-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-lime-400 rounded-full flex items-center justify-center">
+            <Wind className="w-5 h-5 text-black" />
+          </div>
+          <Link to="/" className="text-lg font-semibold text-gray-900">
+            Aelora
+          </Link>
+        </div>
+      </SidebarHeader>
+
+      <SidebarContent className="px-3 py-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-lg font-semibold text-gray-800 mb-6 px-3">
-            Application
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {items.map((item) => (
-                <SidebarMenuItem_ key={item.title} item={item} isOpen={isOpen} />
+                <SideBarTab key={item.url} item={item} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-gray-100 mt-auto p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <span className="text-white text-sm font-medium">JD</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-900">John Doe</span>
+            <span className="text-xs text-gray-500">john@email.com</span>
+          </div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
