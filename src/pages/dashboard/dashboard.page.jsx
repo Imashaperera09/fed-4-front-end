@@ -2,12 +2,19 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
 
 const DashboardPage = () => {
-  const { data, isLoading, isError, error } = useGetEnergyGenerationRecordsBySolarUnitQuery({
+  const { data, isLoading, isError } = useGetEnergyGenerationRecordsBySolarUnitQuery({
     id: "68f27e4735af464f48833c71",
     groupBy: "date",
   });
 
-  const energyData = data?.data || [];
+  // Transform external API data to the format expected by the frontend
+  const transformedData = data ? data.map(item => ({
+    date: item._id.date,
+    energy: Math.round(item.totalEnergyGenerated / 1000) // Convert to kW and round
+  })) : [];
+
+  // Use transformed API data
+  const energyData = transformedData;
   
   return (
     <main className="px-12">
@@ -27,13 +34,15 @@ const DashboardPage = () => {
               </div>
             )}
             {isError && (
-              <div className="text-center py-8">
-                <p className="text-red-500">Error loading data: {error?.message || 'Please check if the backend server is running.'}</p>
+              <div className="text-center py-4 mb-4">
+                <p className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                  ❌ Error loading data: Please check if the backend server is running.
+                </p>
               </div>
             )}
-            {!isLoading && !isError && (
-              <div className="grid grid-cols-7 gap-3">
-                {energyData.slice(0, 7).map((record, index) => {
+            <div className="grid grid-cols-7 gap-3">
+              {energyData.length > 0 ? (
+                energyData.slice(0, 7).map((record, index) => {
                   const date = new Date(record.date);
                   const formattedDate = date.toLocaleDateString('en-US', { 
                     day: 'numeric',
@@ -46,9 +55,13 @@ const DashboardPage = () => {
                       <div className="text-xs text-gray-500 font-medium">{formattedDate}</div>
                     </div>
                   );
-                })}
-              </div>
-            )}
+                })
+              ) : (
+                <div className="col-span-7 text-center py-8">
+                  <p className="text-gray-500">No energy data available</p>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
         
@@ -72,11 +85,13 @@ const DashboardPage = () => {
               </div>
             )}
             {isError && (
-              <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded">
-                <div className="text-red-500">Failed to load chart data: {error?.message || 'Please check backend connection.'}</div>
+              <div className="text-center py-4 mb-4">
+                <p className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                  ❌ Failed to load chart data: Please check backend connection.
+                </p>
               </div>
             )}
-            {!isLoading && !isError && energyData.length > 0 && (
+            {energyData.length > 0 && (
               <div className="space-y-4">
                 {/* SVG Chart */}
                 <div className="relative">
