@@ -10,6 +10,7 @@ import RootLayout from './layouts/rootLayout.jsx'
 import MainLayout from './layouts/main.layout.jsx'
 import DashboardLayout from './layouts/dashboard.layout.jsx'
 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
