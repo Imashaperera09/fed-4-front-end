@@ -23,6 +23,7 @@ const DataCard = ({ data, isLoading, isError}) => {
   };
 
   if (isLoading) return null;
+  
 
   if (!data || isError) {
     return null;
@@ -33,7 +34,7 @@ const DataCard = ({ data, isLoading, isError}) => {
     .map((el) => {
       return {
         date: format(toDate(el._id.date), "MMM d"),
-        energy: el.totalEnergy,
+        energy: el.totalEnergyGenerated,
       };
     });
 

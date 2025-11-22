@@ -42,7 +42,7 @@ const DataCard = ({ data, isLoading, isError,  title = "Data Overview" }) => {
                   {format(toDate(el._id.date), "MMM d")}
                 </h3>
                 <p className="text-lg font-bold text-foreground">
-                  {el.totalEnergy} kWh
+                  {el.totalEnergyGenerated} kWh
                 </p>
               </div>
             </div>  
