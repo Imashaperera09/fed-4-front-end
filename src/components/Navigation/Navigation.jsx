@@ -47,10 +47,10 @@ const Navigation = () => {
         <div className={"flex items-center gap-4"}>
           <div className={"flex items-center gap-2"}>
             <SignedOut>
-              <Button variant="outline" size="sm" onClick={() => navigate('/sign-in')}>
+              <Button size="sm" onClick={() => navigate('/sign-in')}>
                 Sign In
               </Button>
-              <Button size="sm" onClick={() => navigate('/sign-up')}>
+              <Button variant="outline" size="sm" onClick={() => navigate('/sign-up')}>
                 Sign Up
               </Button>
             </SignedOut>
