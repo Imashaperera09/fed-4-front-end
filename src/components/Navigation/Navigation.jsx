@@ -1,8 +1,10 @@
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import s from "./Navigation.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
-  const user = "JD"
+  const navigate = useNavigate();
 
   return (
     <nav className={"px-12 py-6 flex justify-between items-center " + s.nav}>
@@ -44,10 +46,17 @@ const Navigation = () => {
         
         <div className={"flex items-center gap-4"}>
           <div className={"flex items-center gap-2"}>
-            <div className={"w-8 h-8 rounded-full bg-blue-400 flex justify-center items-center"}>
-              <span className="font-['Inter'] text-sm font-semibold text-white">{user}</span>
-            </div>
-            <span className="font-['Inter'] text-sm font-medium">John Doe</span>
+            <SignedOut>
+              <Button variant="outline" size="sm" onClick={() => navigate('/sign-in')}>
+                Sign In
+              </Button>
+              <Button size="sm" onClick={() => navigate('/sign-up')}>
+                Sign Up
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </div>
       </div>
