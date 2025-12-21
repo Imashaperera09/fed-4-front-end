@@ -21,12 +21,19 @@ export function SolarUnitsTab() {
     return <div>Error: {errorSolarUnits.message}</div>;
   }
 
+  if (!solarUnits) {
+    return <div>No data available</div>;
+  }
+
   console.log(solarUnits);
 
 
   const filteredUnits = searchTerm !== "" ? solarUnits.filter(
     (unit) =>
-      unit.serialNumber.toLowerCase().includes(searchTerm.toLowerCase())) : solarUnits;
+      unit.serialNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      unit.capacity.toString().includes(searchTerm) ||
+      unit.status.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : solarUnits;
 
   return (
     <div className="space-y-6">

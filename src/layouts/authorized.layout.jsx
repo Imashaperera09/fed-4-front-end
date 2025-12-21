@@ -5,9 +5,11 @@ import { Navigate } from "react-router";
 export default function AuthorizedLayout() {
     const { user } = useUser();
 
-    if (user?.publicMetadata.role !== 'admin') {
-        return <Navigate to="/" />;
-    }
+    // Temporarily allow all authenticated users for development
+    // TODO: Re-enable role check for production
+    // if (user?.publicMetadata.role !== 'admin') {
+    //     return <Navigate to="/" />;
+    // }
 
     return <Outlet />;
 }
