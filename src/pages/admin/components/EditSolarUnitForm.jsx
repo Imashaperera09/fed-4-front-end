@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -14,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useEditSolarUnitMutation } from "@/lib/redux/query"
-import { useParams } from "react-router"
+import { useParams, useNavigate } from "react-router-dom"
 import { useGetAllUsersQuery } from "@/lib/redux/query"
 
 const formSchema = z.object({
@@ -34,7 +33,7 @@ export function EditSolarUnitForm({ solarUnit }) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             serialNumber: solarUnit.serialNumber,
-            installationDate: solarUnit.installationDate,
+            installationDate: solarUnit.installationDate ? new Date(solarUnit.installationDate).toISOString().split('T')[0] : '',
             capacity: solarUnit.capacity,
             status: solarUnit.status,
             userId: solarUnit.userId,
@@ -42,17 +41,16 @@ export function EditSolarUnitForm({ solarUnit }) {
     })
 
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [editSolarUnit, { isLoading: isEditingSolarUnit }] = useEditSolarUnitMutation();
 
     const { data: users } = useGetAllUsersQuery();
 
-
-    console.log(users);
-
     async function onSubmit(values) {
         try {
             await editSolarUnit({ id, data: values }).unwrap();
+            navigate(`/admin/solar-units/${id}`);
         } catch (error) {
             console.error(error);
         }
@@ -81,7 +79,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                         <FormItem>
                             <FormLabel>Installation Date</FormLabel>
                             <FormControl>
-                                <Input placeholder="Installation Date" {...field} />
+                                <Input type="date" placeholder="Installation Date" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -144,7 +142,10 @@ export function EditSolarUnitForm({ solarUnit }) {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" disabled={isEditingSolarUnit}>{isEditingSolarUnit ? "Editing..." : "Edit"}</Button>
+                <div className="flex gap-4">
+                    <Button type="submit" disabled={isEditingSolarUnit}>{isEditingSolarUnit ? "Saving..." : "Save Changes"}</Button>
+                    <Button type="button" variant="outline" onClick={() => navigate(`/admin/solar-units/${id}`)}>Cancel</Button>
+                </div>
             </form>
         </Form>
     );
