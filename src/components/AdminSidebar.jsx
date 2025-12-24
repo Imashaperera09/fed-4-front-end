@@ -1,5 +1,5 @@
 import { Settings, Zap } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -15,12 +15,12 @@ import {
 const items = [
   {
     title: "Solar Units",
-    url: "/admin/solar-units",
+    url: "/dashboard/admin/solar-units",
     icon: <Zap className="w-8 h-8" size={32} />,
   },
   {
     title: "Settings",
-    url: "/admin/settings",
+    url: "/dashboard/admin/settings",
     icon: <Settings className="w-8 h-8" size={32} />,
   },
 ];

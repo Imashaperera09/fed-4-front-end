@@ -21,7 +21,7 @@ export default function SolarUnitEditPage() {
         return (
             <div className="p-8 text-center">
                 <p className="text-destructive font-medium">Error: {error.message}</p>
-                <Button variant="outline" className="mt-4" onClick={() => navigate("/admin/solar-units")}>
+                <Button variant="outline" className="mt-4" onClick={() => navigate("/dashboard/admin/solar-units")}>
                     Back to Solar Units
                 </Button>
             </div>
@@ -34,7 +34,7 @@ export default function SolarUnitEditPage() {
                 <Button
                     variant="ghost"
                     className="w-fit -ml-2 text-muted-foreground hover:text-foreground transition-colors"
-                    onClick={() => navigate(`/admin/solar-units/${id}`)}
+                    onClick={() => navigate(`/dashboard/admin/solar-units/${id}`)}
                 >
                     <ChevronLeft className="w-4 h-4 mr-2" />
                     Back to Unit Details

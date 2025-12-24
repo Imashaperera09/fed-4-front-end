@@ -56,7 +56,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                 userId: values.userId === "none" ? null : values.userId
             };
             await editSolarUnit({ id, data: submissionData }).unwrap();
-            navigate(`/admin/solar-units/${id}`);
+            navigate(`/dashboard/admin/solar-units/${id}`);
         } catch (err) {
             console.error(err);
             setError(err.data?.message || "Failed to update solar unit. Please try again.");
@@ -164,7 +164,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                             />
                         </div>
                         <div className="flex justify-end gap-4 pt-4">
-                            <Button type="button" variant="outline" onClick={() => navigate(`/admin/solar-units/${id}`)} disabled={isEditingSolarUnit}>
+                            <Button type="button" variant="outline" onClick={() => navigate(`/dashboard/admin/solar-units/${id}`)} disabled={isEditingSolarUnit}>
                                 Cancel
                             </Button>
                             <Button type="submit" className="px-8" disabled={isEditingSolarUnit}>

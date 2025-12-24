@@ -1,5 +1,5 @@
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 
 export default function AdminPage() {
-  return <Navigate to="/admin/solar-units" />;
+  return <Navigate to="/dashboard/admin/solar-units" />;
 }

@@ -4,8 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useGetSolarUnitsQuery } from "@/lib/redux/query";
 import { Zap, Search, Plus, Gauge, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 
 export function SolarUnitsTab() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,7 +37,7 @@ export function SolarUnitsTab() {
             />
           </div>
           <Button asChild className="w-full md:w-auto shadow-lg hover:shadow-primary/20 transition-all">
-            <Link to="/admin/solar-units/create" className="flex items-center gap-2">
+            <Link to="/dashboard/admin/solar-units/create" className="flex items-center gap-2">
               <Plus className="w-4 h-4" />
               Add New Unit
             </Link>
@@ -90,7 +89,7 @@ export function SolarUnitsTab() {
           />
         </div>
         <Button asChild className="w-full md:w-auto shadow-lg hover:shadow-primary/20 transition-all">
-          <Link to="/admin/solar-units/create" className="flex items-center gap-2">
+          <Link to="/dashboard/admin/solar-units/create" className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Add New Unit
           </Link>
@@ -104,7 +103,7 @@ export function SolarUnitsTab() {
             key={unit._id}
             className="group relative border-none shadow-md hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur-sm overflow-hidden cursor-pointer animate-in fade-in slide-in-from-bottom-4"
             style={{ animationDelay: `${index * 50}ms` }}
-            onClick={() => navigate(`/admin/solar-units/${unit._id}`)}
+            onClick={() => navigate(`/dashboard/admin/solar-units/${unit._id}`)}
           >
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-6">

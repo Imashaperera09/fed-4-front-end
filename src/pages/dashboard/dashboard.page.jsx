@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
-import DataCard from "./components/DataCard";
+import SolarEnergyProduction from "@/components/SolarEnergyProduction";
 import DataChart from "./components/DataChart";
 import { useUser } from "@clerk/clerk-react";
 
@@ -7,6 +8,11 @@ const DashboardPage = () => {
   const { user } = useUser();
 
   const solarUnitId = "68f27e4735af464f48833c71";
+
+  // Lifted Anomaly Detection State
+  const [detectionMethod, setDetectionMethod] = useState("window-average");
+  const [threshold, setThreshold] = useState(40); // 40% for window average
+  const [minKwh, setMinKwh] = useState(5); // 5 kWh for absolute threshold
 
   // Fetch energy data
   const { data, isLoading, isError, error } = useGetEnergyGenerationRecordsBySolarUnitQuery({
@@ -20,12 +26,16 @@ const DashboardPage = () => {
       <p className="text-gray-600 mt-2">Welcome back to your Solar Energy Production Dashboard</p>
 
       <div className="mt-8">
-        <DataCard
+        <SolarEnergyProduction
           data={data}
           isLoading={isLoading}
           isError={isError}
-          error={error}
-          title="Last 7 Days Energy Production"
+          detectionMethod={detectionMethod}
+          setDetectionMethod={setDetectionMethod}
+          threshold={threshold}
+          setThreshold={setThreshold}
+          minKwh={minKwh}
+          setMinKwh={setMinKwh}
         />
       </div>
 
@@ -35,6 +45,9 @@ const DashboardPage = () => {
           isLoading={isLoading}
           isError={isError}
           error={error}
+          detectionMethod={detectionMethod}
+          threshold={threshold}
+          minKwh={minKwh}
         />
       </div>
     </main>

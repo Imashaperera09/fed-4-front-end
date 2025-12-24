@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useCreateSolarUnitMutation } from "@/lib/redux/query"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useState } from "react"
 
@@ -43,7 +43,7 @@ export function CreateSolarUnitForm() {
         try {
             setError(null);
             await createSolarUnit(values).unwrap();
-            navigate("/admin/solar-units");
+            navigate("/dashboard/admin/solar-units");
         } catch (err) {
             console.error(err);
             setError(err.data?.message || "Failed to create solar unit. Please try again.");
@@ -128,7 +128,7 @@ export function CreateSolarUnitForm() {
                             />
                         </div>
                         <div className="flex justify-end gap-4 pt-4">
-                            <Button type="button" variant="outline" onClick={() => navigate("/admin/solar-units")} disabled={isCreatingSolarUnit}>
+                            <Button type="button" variant="outline" onClick={() => navigate("/dashboard/admin/solar-units")} disabled={isCreatingSolarUnit}>
                                 Cancel
                             </Button>
                             <Button type="submit" className="px-8" disabled={isCreatingSolarUnit}>

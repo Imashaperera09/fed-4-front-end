@@ -4,9 +4,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip, Dot } from "recharts";
 import { format, toDate } from "date-fns";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -15,98 +15,143 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const DataCard = ({ data, isLoading, isError}) => {
+const DataChart = ({ data, isLoading, isError, detectionMethod, threshold, minKwh }) => {
   const [selectedRange, setSelectedRange] = useState("7");
 
   const handleRangeChange = (range) => {
     setSelectedRange(range);
   };
 
-  if (isLoading) return null;
-  
+  const processedData = useMemo(() => {
+    if (!data || isError) return [];
 
-  if (!data || isError) {
-    return null;
-  }
+    const rangeData = data.slice(0, parseInt(selectedRange));
 
-  const lastSelectedRangeDaysEnergyProduction = data
-    .slice(0, parseInt(selectedRange))
-    .map((el) => {
+    // Calculate Window Average for the last 7 days (as a baseline)
+    const last7Days = data.slice(0, 7);
+    const totalEnergy7 = last7Days.reduce((acc, curr) => acc + curr.totalEnergyGenerated, 0);
+    const windowAverage7 = totalEnergy7 / last7Days.length;
+
+    return rangeData.map((el) => {
+      const energy = el.totalEnergyGenerated;
+      let isAnomaly = false;
+
+      if (detectionMethod === "window-average") {
+        const thresholdValue = windowAverage7 * (threshold / 100);
+        if (energy < thresholdValue) isAnomaly = true;
+      } else {
+        if (energy < minKwh) isAnomaly = true;
+      }
+
       return {
         date: format(toDate(el._id.date), "MMM d"),
-        energy: el.totalEnergyGenerated,
+        energy: energy,
+        isAnomaly: isAnomaly,
       };
-    });
+    }).reverse(); // Reverse to show chronological order
+  }, [data, isError, selectedRange, detectionMethod, threshold, minKwh]);
+
+  if (isLoading) {
+    return (
+      <Card className="rounded-2xl p-6 border-none shadow-lg bg-white/50 backdrop-blur-sm animate-pulse">
+        <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
+        <div className="h-[300px] bg-gray-100 rounded-xl"></div>
+      </Card>
+    );
+  }
+
+  if (!data || isError) return null;
 
   const chartConfig = {
     energy: {
       label: "Energy (kWh)",
-      color: "oklch(54.6% 0.245 262.881)",
+      color: "hsl(var(--chart-1))",
     },
   };
 
-  const title = "Energy Production Chart";
-
-  console.log(lastSelectedRangeDaysEnergyProduction);
+  const CustomDot = (props) => {
+    const { cx, cy, payload } = props;
+    if (payload.isAnomaly) {
+      return (
+        <circle cx={cx} cy={cy} r={5} fill="#ef4444" stroke="#fff" strokeWidth={2} />
+      );
+    }
+    return null;
+  };
 
   return (
-    <Card className="rounded-md p-4">
-      <div className="flex justify-between items-center gap-2">
-        <h2 className="text-xl font-medium text-foreground">{title}</h2>
+    <Card className="rounded-2xl p-6 border-none shadow-lg bg-white/50 backdrop-blur-sm overflow-hidden">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <Select value={selectedRange} onValueChange={handleRangeChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue className="text-foreground" placeholder="Select Range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7">7 Days</SelectItem>
-              <SelectItem value="30">30 Days</SelectItem>
-            </SelectContent>
-          </Select>
+          <h2 className="text-xl font-bold text-gray-900">Energy Production Chart</h2>
+          <p className="text-xs text-gray-500 font-medium uppercase tracking-widest mt-1">Performance Overview</p>
         </div>
+        <Select value={selectedRange} onValueChange={handleRangeChange}>
+          <SelectTrigger className="w-[140px] h-9 border-gray-200 rounded-xl focus:ring-blue-500">
+            <SelectValue placeholder="Select Range" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">Last 7 Days</SelectItem>
+            <SelectItem value="30">Last 30 Days</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <div>
-        <ChartContainer config={chartConfig}>
+
+      <div className="h-[350px] w-full">
+        <ChartContainer config={chartConfig} className="h-full w-full">
           <AreaChart
-            accessibilityLayer
-            data={lastSelectedRangeDaysEnergyProduction}
-            margin={{
-              left: 40,
-              right: 20,
-              top: 20,
-              bottom: 20,
-            }}
+            data={processedData}
+            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
           >
-            <CartesianGrid vertical={false} />
+            <defs>
+              <linearGradient id="colorEnergy" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f1f5f9" />
             <XAxis
               dataKey="date"
-              tickLine={true}
-              axisLine={true}
-              tickMargin={8}
-              tick={false}
-              label={{ value: "Date", position: "insideBottom", offset: -5 }}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
+              dy={10}
             />
             <YAxis
-              tickLine={true}
-              axisLine={true}
-              tickMargin={8}
-              tickCount={10}
-              label={{ value: "kWh", angle: -90, position: "insideLeft" }}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip
+              content={<ChartTooltipContent hideLabel />}
+              cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '5 5' }}
+            />
             <Area
+              type="monotone"
               dataKey="energy"
-              type="natural"
-              fill="var(--color-energy)"
-              fillOpacity={0.4}
-              stroke="var(--color-energy)"
-              stackId="a"
+              stroke="#3b82f6"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorEnergy)"
+              dot={<CustomDot />}
+              activeDot={{ r: 6, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }}
             />
           </AreaChart>
         </ChartContainer>
+      </div>
+
+      <div className="mt-6 flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+          Normal Production
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-red-500"></div>
+          Anomaly Detected
+        </div>
       </div>
     </Card>
   );
 };
 
-export default DataCard;
+export default DataChart;

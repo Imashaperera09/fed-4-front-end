@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 
 export default function AuthorizedLayout() {
     const { user } = useUser();

@@ -1,72 +1,190 @@
+import { useState, useMemo } from "react";
 import EnergyProductionCard from "./EnergyProductionCard";
-import Tab from "./Tab";
-import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { format, toDate, subDays } from "date-fns";
 
-const SolarEnergyProduction = () => {
-  const energyProductionData = [
-    { day: "Mon", date: "Aug 18", production: 34.1, hasAnomaly: false },
-    { day: "Tue", date: "Aug 19", production: 3.2, hasAnomaly: true },
-    { day: "Wed", date: "Aug 20", production: 44.7, hasAnomaly: false },
-    { day: "Thu", date: "Aug 21", production: 21.9, hasAnomaly: false },
-    { day: "Fri", date: "Aug 22", production: 0, hasAnomaly: true },
-    { day: "Sat", date: "Aug 23", production: 43, hasAnomaly: false },
-    { day: "Sun", date: "Aug 24", production: 26.8, hasAnomaly: false },
-  ];
+const SolarEnergyProduction = ({
+  data,
+  isLoading,
+  isError,
+  detectionMethod,
+  setDetectionMethod,
+  threshold,
+  setThreshold,
+  minKwh,
+  setMinKwh,
+}) => {
+  const [selectedTab, setSelectedTab] = useState("all");
 
-  const tabs = [
-    { label: "All", value: "all" },
-    { label: "Anomaly", value: "anomaly" },
-  ];
+  // Process data for the last 7 days
+  const processedData = useMemo(() => {
+    if (!data || isError) return [];
 
-  const [selectedTab, setSelectedTab] = useState(tabs[0].value);
+    // Assuming data is already sorted by date descending or we take the first 7
+    const last7Days = data.slice(0, 7).map((el) => ({
+      ...el,
+      dateObj: toDate(el._id.date),
+      energy: el.totalEnergyGenerated,
+    }));
 
-  const handleTabClick = (value) => {
-    setSelectedTab(value);
-  };
+    // Calculate Window Average (7-day average of the provided data)
+    const totalEnergy = last7Days.reduce((acc, curr) => acc + curr.energy, 0);
+    const windowAverage = totalEnergy / last7Days.length;
 
-  const filteredEnergyProductionData = energyProductionData.filter((el) => {
-    if (selectedTab === "all") {
-      return true;
-    } else if (selectedTab === "anomaly") {
-      return el.hasAnomaly;
-    }
+    return last7Days.map((el) => {
+      let isAnomaly = false;
+      let anomalyReason = "";
+
+      if (detectionMethod === "window-average") {
+        const thresholdValue = windowAverage * (threshold / 100);
+        if (el.energy < thresholdValue) {
+          isAnomaly = true;
+          anomalyReason = `${((1 - el.energy / windowAverage) * 100).toFixed(1)}% below window average (${windowAverage.toFixed(1)} kWh)`;
+        }
+      } else {
+        if (el.energy < minKwh) {
+          isAnomaly = true;
+          anomalyReason = `Below absolute threshold of ${minKwh} kWh`;
+        }
+      }
+
+      return {
+        ...el,
+        day: format(el.dateObj, "EEE"),
+        dateStr: format(el.dateObj, "MMM d"),
+        isAnomaly,
+        anomalyReason,
+      };
+    }).reverse();
+  }, [data, isError, detectionMethod, threshold, minKwh]);
+
+  const stats = useMemo(() => {
+    if (processedData.length === 0) return null;
+    const energies = processedData.map((d) => d.energy);
+    const avg = energies.reduce((a, b) => a + b, 0) / energies.length;
+    const min = Math.min(...energies);
+    const max = Math.max(...energies);
+    const anomalies = processedData.filter((d) => d.isAnomaly).length;
+    const anomalyPercentage = ((anomalies / processedData.length) * 100).toFixed(1);
+
+    return { avg, min, max, anomalies, anomalyPercentage };
+  }, [processedData]);
+
+  const filteredData = processedData.filter((el) => {
+    if (selectedTab === "all") return true;
+    return el.isAnomaly;
   });
+
+  if (isLoading) {
+    return (
+      <section className="px-12 py-6 animate-pulse">
+        <div className="h-8 w-64 bg-gray-200 rounded mb-4"></div>
+        <div className="h-4 w-48 bg-gray-100 rounded mb-8"></div>
+        <div className="grid grid-cols-7 gap-4">
+          {[...Array(7)].map((_, i) => (
+            <div key={i} className="h-32 bg-gray-100 rounded-lg"></div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (isError || !data) return null;
 
   return (
     <section className="px-12 font-[Inter] py-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Solar Energy Production</h2>
-        <p className="text-gray-600">Daily energy output for the past 7 days</p>
-      </div>
-      <div className="mt-4 flex items-center gap-x-4">
-        {tabs.map((tab) => {
-          return (
-            <button
-              key={tab.value}
-              className={`px-4 py-2 rounded-lg font-medium ${
-                selectedTab === tab.value
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-              onClick={() => handleTabClick(tab.value)}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-      <div className="mt-4 grid grid-cols-7 gap-4">
-        {filteredEnergyProductionData.map((el) => {
-          return (
-            <EnergyProductionCard
-              key={el.date}
-              day={el.day}
-              date={el.date}
-              production={el.production}
-              hasAnomaly={el.hasAnomaly}
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Solar Energy Production</h2>
+          <p className="text-gray-500 text-sm">Daily energy output for the past 7 days</p>
+        </div>
+
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Detection Method:</span>
+            <Select value={detectionMethod} onValueChange={setDetectionMethod}>
+              <SelectTrigger className="w-[200px] h-9 border-blue-200 focus:ring-blue-500">
+                <SelectValue placeholder="Select Method" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="window-average">Window Average (7-day)</SelectItem>
+                <SelectItem value="absolute-threshold">Absolute Threshold</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-4 w-full max-w-[450px] bg-blue-50/30 p-2 px-4 rounded-full border border-blue-100/50">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap">
+              {detectionMethod === "window-average"
+                ? `Threshold: ${threshold}% below average`
+                : `Minimum: ${minKwh} kWh`}
+            </span>
+            <input
+              type="range"
+              min={detectionMethod === "window-average" ? "0" : "0"}
+              max={detectionMethod === "window-average" ? "100" : "50"}
+              step="1"
+              value={detectionMethod === "window-average" ? threshold : minKwh}
+              onChange={(e) => (detectionMethod === "window-average" ? setThreshold(e.target.value) : setMinKwh(e.target.value))}
+              className="flex-1 h-1 bg-blue-100 rounded-full appearance-none cursor-pointer accent-blue-600 hover:accent-blue-700 transition-all"
             />
-          );
-        })}
+          </div>
+        </div>
+      </div>
+
+      {stats && (
+        <div className="mb-6 p-3 bg-blue-50/50 border border-blue-100 rounded-xl flex items-center justify-between text-sm">
+          <div className="flex items-center gap-6">
+            <span className="text-blue-800 font-medium">
+              Window Average: <span className="font-bold">{stats.avg.toFixed(1)} kWh</span>
+            </span>
+            <span className="text-blue-800/70">
+              | Range: <span className="font-medium">{stats.min.toFixed(1)} - {stats.max.toFixed(1)} kWh</span>
+            </span>
+          </div>
+          <div className="text-blue-800 font-medium">
+            Anomalies: <span className="text-red-600 font-bold">{stats.anomalies}</span> out of 7 days ({stats.anomalyPercentage}%)
+          </div>
+        </div>
+      )}
+
+      <div className="mb-6 flex gap-2">
+        <Button
+          variant={selectedTab === "all" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setSelectedTab("all")}
+          className="rounded-full px-6"
+        >
+          All
+        </Button>
+        <Button
+          variant={selectedTab === "anomaly" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setSelectedTab("anomaly")}
+          className="rounded-full px-6"
+        >
+          Anomaly
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-4">
+        {filteredData.map((el) => (
+          <EnergyProductionCard
+            key={el._id.date}
+            day={el.day}
+            date={el.dateStr}
+            production={el.energy}
+            hasAnomaly={el.isAnomaly}
+            anomalyReason={el.anomalyReason}
+          />
+        ))}
       </div>
     </section>
   );

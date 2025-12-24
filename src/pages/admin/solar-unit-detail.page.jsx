@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -25,7 +25,7 @@ export default function SolarUnitDetailPage() {
     return (
       <div className="p-8 text-center">
         <p className="text-destructive font-medium">Error: {errorSolarUnit.message}</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate("/admin/solar-units")}>
+        <Button variant="outline" className="mt-4" onClick={() => navigate("/dashboard/admin/solar-units")}>
           Back to Solar Units
         </Button>
       </div>
@@ -33,14 +33,14 @@ export default function SolarUnitDetailPage() {
   }
 
   const handleEdit = () => {
-    navigate(`/admin/solar-units/${solarUnit._id}/edit`);
+    navigate(`/dashboard/admin/solar-units/${solarUnit._id}/edit`);
   };
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this solar unit? This action cannot be undone.")) {
       try {
         await deleteSolarUnit(solarUnit._id).unwrap();
-        navigate("/admin/solar-units");
+        navigate("/dashboard/admin/solar-units");
       } catch (error) {
         console.error("Failed to delete solar unit:", error);
         alert("Failed to delete solar unit. Please try again.");
@@ -55,7 +55,7 @@ export default function SolarUnitDetailPage() {
         <Button
           variant="ghost"
           className="w-fit -ml-2 text-muted-foreground hover:text-foreground transition-colors"
-          onClick={() => navigate("/admin/solar-units")}
+          onClick={() => navigate("/dashboard/admin/solar-units")}
         >
           <ChevronLeft className="w-4 h-4 mr-2" />
           Back
@@ -80,8 +80,8 @@ export default function SolarUnitDetailPage() {
                 <h2 className="text-xl font-semibold text-foreground">Status</h2>
                 <div
                   className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase ${solarUnit.status === "ACTIVE"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-700"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-700"
                     }`}
                 >
                   {solarUnit.status}

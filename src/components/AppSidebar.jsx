@@ -1,5 +1,5 @@
 import { ChartLine, LayoutDashboard, TriangleAlert, Users, Wind } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +12,7 @@ import {
   SidebarHeader,
   SidebarMenuBadge,
 } from "@/components/ui/sidebar";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useMemo, useState } from "react";
@@ -43,13 +43,13 @@ const SideBarTab = ({ item }) => {
 
   return (
     <SidebarMenuItem key={item.url}>
-      <SidebarMenuButton 
-        asChild 
+      <SidebarMenuButton
+        asChild
         isActive={isActive}
         className={`
           relative w-full justify-start text-sm font-medium transition-colors rounded-md
-          ${isActive 
-            ? 'bg-blue-50 text-blue-700 hover:bg-blue-50' 
+          ${isActive
+            ? 'bg-blue-50 text-blue-700 hover:bg-blue-50'
             : 'text-gray-700 hover:bg-gray-100'
           }
         `}

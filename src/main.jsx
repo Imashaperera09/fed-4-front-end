@@ -50,12 +50,12 @@ createRoot(document.getElementById("root")).render(
                 </Route>
                 <Route element={<AuthorizedLayout />}>
                   <Route element={<AdminLayout />}>
-                    <Route path="/admin" element={<AdminPage />} />
-                    <Route path="/admin/solar-units" element={<SolarUnitsPage />} />
-                    <Route path="/admin/solar-units/:id" element={<SolarUnitDetailPage />} />
-                    <Route path="/admin/solar-units/:id/edit" element={<SolarUnitEditPage />} />
-                    <Route path="/admin/solar-units/create" element={<SolarUnitCreatePage />} />
-                    <Route path="/admin/settings" element={<SettingsPage />} />
+                    <Route path="/dashboard/admin" element={<AdminPage />} />
+                    <Route path="/dashboard/admin/solar-units" element={<SolarUnitsPage />} />
+                    <Route path="/dashboard/admin/solar-units/:id" element={<SolarUnitDetailPage />} />
+                    <Route path="/dashboard/admin/solar-units/:id/edit" element={<SolarUnitEditPage />} />
+                    <Route path="/dashboard/admin/solar-units/create" element={<SolarUnitCreatePage />} />
+                    <Route path="/dashboard/admin/settings" element={<SettingsPage />} />
                   </Route>
                 </Route>
               </Route>
