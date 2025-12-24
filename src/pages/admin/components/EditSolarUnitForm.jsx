@@ -26,7 +26,7 @@ const formSchema = z.object({
         return undefined;
     }, z.number().positive({ message: "Capacity must be a positive number" })),
     status: z.enum(["ACTIVE", "INACTIVE", "MAINTENANCE"], { message: "Please select a valid status" }),
-    userId: z.string().min(1, { message: "User ID is required" }),
+    userId: z.string().optional(),
 });
 
 export function EditSolarUnitForm({ solarUnit }) {
@@ -41,7 +41,7 @@ export function EditSolarUnitForm({ solarUnit }) {
             installationDate: solarUnit.installationDate ? new Date(solarUnit.installationDate).toISOString().split('T')[0] : '',
             capacity: solarUnit.capacity,
             status: solarUnit.status,
-            userId: solarUnit.userId,
+            userId: solarUnit.userId || "none",
         },
     })
 
@@ -51,7 +51,11 @@ export function EditSolarUnitForm({ solarUnit }) {
     async function onSubmit(values) {
         try {
             setError(null);
-            await editSolarUnit({ id, data: values }).unwrap();
+            const submissionData = {
+                ...values,
+                userId: values.userId === "none" ? null : values.userId
+            };
+            await editSolarUnit({ id, data: submissionData }).unwrap();
             navigate(`/admin/solar-units/${id}`);
         } catch (err) {
             console.error(err);
@@ -147,6 +151,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                                                     <SelectValue placeholder="Select User" />
                                                 </SelectTrigger>
                                                 <SelectContent>
+                                                    <SelectItem value="none">No User Assigned</SelectItem>
                                                     {users?.map((user) => (
                                                         <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
                                                     ))}
