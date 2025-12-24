@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useEditSolarUnitMutation } from "@/lib/redux/query"
+import { useEditSolarUnitMutation, useGetAllUsersQuery } from "@/lib/redux/query"
 import { useParams, useNavigate } from "react-router-dom"
-import { useGetAllUsersQuery } from "@/lib/redux/query"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { useState } from "react"
 
 const formSchema = z.object({
     serialNumber: z.string().min(1, { message: "Serial number is required" }),
@@ -29,6 +30,10 @@ const formSchema = z.object({
 });
 
 export function EditSolarUnitForm({ solarUnit }) {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [error, setError] = useState(null);
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,113 +45,130 @@ export function EditSolarUnitForm({ solarUnit }) {
         },
     })
 
-    const { id } = useParams();
-    const navigate = useNavigate();
-
     const [editSolarUnit, { isLoading: isEditingSolarUnit }] = useEditSolarUnitMutation();
-
     const { data: users } = useGetAllUsersQuery();
 
     async function onSubmit(values) {
         try {
+            setError(null);
             await editSolarUnit({ id, data: values }).unwrap();
             navigate(`/admin/solar-units/${id}`);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
+            setError(err.data?.message || "Failed to update solar unit. Please try again.");
         }
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="serialNumber"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Serial Number</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Serial Number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="installationDate"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Installation Date</FormLabel>
-                            <FormControl>
-                                <Input type="date" placeholder="Installation Date" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="capacity"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Capacity</FormLabel>
-                            <FormControl>
-                                <Input type="number" placeholder="Capacity" {...field} onChange={(e) => field.onChange(parseFloat(e.target.value))} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Status</FormLabel>
-                            <FormControl>
-                                <Select value={field.value || ""} onValueChange={field.onChange}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select Status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="ACTIVE">Active</SelectItem>
-                                        <SelectItem value="INACTIVE">Inactive</SelectItem>
-                                        <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="userId"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>User</FormLabel>
-                            <FormControl>
-                                <Select value={field.value || ""} onValueChange={field.onChange}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select User" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {users?.map((user) => (
-                                            <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <div className="flex gap-4">
-                    <Button type="submit" disabled={isEditingSolarUnit}>{isEditingSolarUnit ? "Saving..." : "Save Changes"}</Button>
-                    <Button type="button" variant="outline" onClick={() => navigate(`/admin/solar-units/${id}`)}>Cancel</Button>
-                </div>
-            </form>
-        </Form>
+        <Card className="max-w-2xl mx-auto shadow-lg border-none bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+                <CardTitle className="text-2xl">Edit Unit Details</CardTitle>
+                <CardDescription>Update the technical specifications and assignment for this solar unit.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        {error && (
+                            <div className="p-3 rounded-md bg-destructive/15 text-destructive text-sm font-medium">
+                                {error}
+                            </div>
+                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                                control={form.control}
+                                name="serialNumber"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Serial Number</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Serial Number" {...field} className="bg-background/50" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="installationDate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Installation Date</FormLabel>
+                                        <FormControl>
+                                            <Input type="date" {...field} className="bg-background/50" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="capacity"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Capacity (Watts)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="Capacity" {...field} onChange={(e) => field.onChange(parseFloat(e.target.value))} className="bg-background/50" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="status"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Status</FormLabel>
+                                        <FormControl>
+                                            <Select value={field.value || ""} onValueChange={field.onChange}>
+                                                <SelectTrigger className="bg-background/50">
+                                                    <SelectValue placeholder="Select Status" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="ACTIVE">Active</SelectItem>
+                                                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                                                    <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="userId"
+                                render={({ field }) => (
+                                    <FormItem className="md:col-span-2">
+                                        <FormLabel>Assigned User</FormLabel>
+                                        <FormControl>
+                                            <Select value={field.value || ""} onValueChange={field.onChange}>
+                                                <SelectTrigger className="bg-background/50">
+                                                    <SelectValue placeholder="Select User" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {users?.map((user) => (
+                                                        <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="flex justify-end gap-4 pt-4">
+                            <Button type="button" variant="outline" onClick={() => navigate(`/admin/solar-units/${id}`)} disabled={isEditingSolarUnit}>
+                                Cancel
+                            </Button>
+                            <Button type="submit" className="px-8" disabled={isEditingSolarUnit}>
+                                {isEditingSolarUnit ? "Saving..." : "Save Changes"}
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
     );
 }
