@@ -1,5 +1,5 @@
 import { ChartLine, LayoutDashboard, TriangleAlert, Users, Wind } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -69,14 +69,15 @@ const SideBarTab = ({ item }) => {
 };
 
 export function AppSidebar() {
+  const navigate = useNavigate();
   const [selectedUser, setSelectedUser] = useState({ name: "John Doe", email: "john@email.com" });
   const [usersOpen, setUsersOpen] = useState(false);
 
   // Fix: usersList should be an array, not an object
   const usersList = useMemo(() => ([
-    { name: "Alice", email: "alice@email.com" },
-    { name: "Alexander", email: "alexander@email.com" },
-    { name: "John Doe", email: "john@email.com" },
+    { name: "Alice", email: "alice@email.com", url: "/dashboard" },
+    { name: "Alexander", email: "alexander@email.com", url: "/dashboard/alexander" },
+    { name: "John Doe", email: "john@email.com", url: "/dashboard" },
   ]), []);
 
   const initials = (name) => name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -125,7 +126,10 @@ export function AppSidebar() {
                         value={selectedUser.name}
                         onValueChange={(val) => {
                           const u = usersList.find((u) => u.name === val);
-                          if (u) setSelectedUser(u);
+                          if (u) {
+                            setSelectedUser(u);
+                            if (u.url) navigate(u.url);
+                          }
                           setUsersOpen(false);
                         }}
                       >
@@ -160,7 +164,10 @@ export function AppSidebar() {
               value={selectedUser.name}
               onValueChange={(val) => {
                 const u = usersList.find((u) => u.name === val);
-                if (u) setSelectedUser(u);
+                if (u) {
+                  setSelectedUser(u);
+                  if (u.url) navigate(u.url);
+                }
               }}
             >
               <SelectTrigger className="w-full h-8">
