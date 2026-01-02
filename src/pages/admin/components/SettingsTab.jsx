@@ -7,7 +7,7 @@ import { Settings, Bell, Lock, Database, Save, X, ShieldCheck, History } from "l
 
 export function SettingsTab() {
   const [settings, setSettings] = useState({
-    appName: "Aelora Admin",
+    appName: "SolarNova Admin",
     maintenanceMode: false,
     emailNotifications: true,
     logRetention: "30",

@@ -49,8 +49,8 @@ const SideBarTab = ({ item }) => {
         className={`
           relative w-full justify-start text-sm font-medium transition-colors rounded-md
           ${isActive
-            ? 'bg-blue-50 text-blue-700 hover:bg-blue-50'
-            : 'text-gray-700 hover:bg-gray-100'
+            ? 'bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent'
+            : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/50'
           }
         `}
       >
@@ -58,7 +58,7 @@ const SideBarTab = ({ item }) => {
           {item.icon}
           <span>{item.title}</span>
           {item.badge && (
-            <SidebarMenuBadge className="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-0.5 rounded-full font-medium">
+            <SidebarMenuBadge className="ml-auto bg-sidebar-accent text-sidebar-foreground/60 text-xs px-2 py-0.5 rounded-full font-medium">
               {item.badge}
             </SidebarMenuBadge>
           )}
@@ -83,14 +83,14 @@ export function AppSidebar() {
   const initials = (name) => name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
   return (
-    <Sidebar className="w-64 border-r border-gray-200 bg-white">
-      <SidebarHeader className="h-16 border-b border-gray-100 flex items-center px-4">
+    <Sidebar className="w-64 border-r border-sidebar-border bg-sidebar">
+      <SidebarHeader className="h-16 border-b border-sidebar-border flex items-center px-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-lime-400 rounded-full flex items-center justify-center">
-            <Wind className="w-5 h-5 text-black" />
+          <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+            <img src="/assests/logo.png" alt="SolarNova Logo" className="w-full h-full object-contain" />
           </div>
-          <Link to="/" className="text-lg font-semibold text-gray-900">
-            Aelora
+          <Link to="/" className="text-xl font-bold tracking-tight text-sidebar-foreground">
+            SolarNova
           </Link>
         </div>
       </SidebarHeader>
@@ -107,11 +107,11 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <Sheet open={usersOpen} onOpenChange={setUsersOpen}>
                   <SheetTrigger asChild>
-                    <SidebarMenuButton className="relative w-full justify-start text-sm font-medium rounded-md text-gray-700 hover:bg-gray-100">
+                    <SidebarMenuButton className="relative w-full justify-start text-sm font-medium rounded-md text-sidebar-foreground/80 hover:bg-sidebar-accent/50">
                       <div className="flex items-center gap-3 px-3 py-2">
                         <Users className="w-4 h-4" />
                         <span>Users</span>
-                        <SidebarMenuBadge className="ml-auto bg-gray-200 text-gray-600 text-xs px-2 py-0.5 rounded-full font-medium">
+                        <SidebarMenuBadge className="ml-auto bg-sidebar-accent text-sidebar-foreground/60 text-xs px-2 py-0.5 rounded-full font-medium">
                           Select
                         </SidebarMenuBadge>
                       </div>
@@ -144,7 +144,7 @@ export function AppSidebar() {
                           ))}
                         </SelectContent>
                       </Select>
-                      <div className="mt-3 text-xs text-gray-500">Current: {selectedUser.name} ({selectedUser.email})</div>
+                      <div className="mt-3 text-xs text-sidebar-foreground/60">Current: {selectedUser.name} ({selectedUser.email})</div>
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -154,7 +154,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-gray-100 mt-auto p-4">
+      <SidebarFooter className="border-t border-sidebar-border mt-auto p-4">
         <div className="flex items-center gap-3 w-full">
           <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
             <span className="text-white text-sm font-medium">{initials(selectedUser.name)}</span>
@@ -182,7 +182,7 @@ export function AppSidebar() {
               </SelectContent>
             </Select>
             <div className="mt-1">
-              <span className="text-xs text-gray-500">{selectedUser.email}</span>
+              <span className="text-xs text-sidebar-foreground/60">{selectedUser.email}</span>
             </div>
           </div>
         </div>

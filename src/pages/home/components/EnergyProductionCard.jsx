@@ -2,27 +2,27 @@ import { useState } from 'react';
 
 const EnergyProductionCard = (props) => {
 
- /* if (props.hasAnomaly) {
-    return (
-      <div className="border border-red-500 rounded-lg"}>
-        <div className="absolute top-0 right-0 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-t-lg">
-          Anomaly
-        </div>
-      <div className="flex flex-col items-center gap-2 p-6 pb-2">
-        <span className="block text-gray-600 text-sm font-medium">{props.day}</span>
-        <span className="block text-xs text-gray-500">{props.date}</span>
-      </div>
-      <div className="p-6 pt-2 flex flex-col items-center">
-        <span className={props.hasAnomaly ? "block mb-1 text-3xl font-bold text-red-600" : "block mb-1 text-3xl font-bold text-blue-600"}>
-          {props.production}
-        </span>
-        <span className="block text-sm font-medium text-gray-500">kWh</span>
-      </div>
-    </div>
-    );
-  };*/
+  /* if (props.hasAnomaly) {
+     return (
+       <div className="border border-red-500 rounded-lg"}>
+         <div className="absolute top-0 right-0 bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-t-lg">
+           Anomaly
+         </div>
+       <div className="flex flex-col items-center gap-2 p-6 pb-2">
+         <span className="block text-gray-600 text-sm font-medium">{props.day}</span>
+         <span className="block text-xs text-gray-500">{props.date}</span>
+       </div>
+       <div className="p-6 pt-2 flex flex-col items-center">
+         <span className={props.hasAnomaly ? "block mb-1 text-3xl font-bold text-red-600" : "block mb-1 text-3xl font-bold text-blue-600"}>
+           {props.production}
+         </span>
+         <span className="block text-sm font-medium text-gray-500">kWh</span>
+       </div>
+     </div>
+     );
+   };*/
 
-  
+
   const [isSelected, setIsSelected] = useState(false);
   // const [num, setNum] = useState(0);
   // const [user, setUser] = useState({ name: "Imasha", age: 24 });
@@ -31,8 +31,8 @@ const EnergyProductionCard = (props) => {
 
   //click handler
   const handleClick = () => {
-   setIsSelected(!isSelected);
-   // setNum(num + 5);
+    setIsSelected(!isSelected);
+    // setNum(num + 5);
     // setNum((n) => n + 1);
     // setNum(42);
     // setUser({ ...user, age: 24 });
@@ -42,11 +42,9 @@ const EnergyProductionCard = (props) => {
   //conditional rendering for anomaly
   return (
     <button
-      className={`block cursor-pointer ${
-        isSelected ? "outline-2 outline-offset-2 outline-blue-600" : ""
-      } relative border ${
-        props.hasAnomaly ? "border-red-500" : "border-gray-300"
-      } rounded-lg`}
+      className={`block cursor-pointer ${isSelected ? "outline-2 outline-offset-2 outline-blue-600" : ""
+        } relative border ${props.hasAnomaly ? "border-red-500" : "border-border"
+        } rounded-lg`}
       onClick={handleClick}
     >
       {props.hasAnomaly && (
@@ -57,20 +55,19 @@ const EnergyProductionCard = (props) => {
       {/* <div>{nums.toString()}</div> */}
       <div className="flex flex-col items-center gap-2 p-6 pb-2">
         {/* <span className="block">{num}</span> */}
-        <span className="block text-gray-600 text-sm font-medium">
+        <span className="block text-muted-foreground text-sm font-medium">
           {props.day}
         </span>
-        <span className="block text-xs text-gray-500">{props.date}</span>
+        <span className="block text-xs text-muted-foreground/70">{props.date}</span>
       </div>
       <div className="p-6 pt-2 flex flex-col items-center">
         <span
-          className={`block mb-1 text-3xl font-bold ${
-            props.hasAnomaly ? "text-red-600" : "text-blue-600"
-          }`}
+          className={`block mb-1 text-3xl font-bold ${props.hasAnomaly ? "text-red-600" : "text-blue-600"
+            }`}
         >
           {props.production}
         </span>
-        <span className="block text-sm font-medium text-gray-500">kWh</span>
+        <span className="block text-sm font-medium text-muted-foreground">kWh</span>
       </div>
     </button>
   );

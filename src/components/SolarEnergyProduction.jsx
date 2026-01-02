@@ -102,15 +102,15 @@ const SolarEnergyProduction = ({
     <section className="px-12 font-[Inter] py-6">
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Solar Energy Production</h2>
-          <p className="text-gray-500 text-sm">Daily energy output for the past 7 days</p>
+          <h2 className="text-2xl font-bold text-foreground">Solar Energy Production</h2>
+          <p className="text-muted-foreground text-sm">Daily energy output for the past 7 days</p>
         </div>
 
         <div className="flex flex-col items-end gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Detection Method:</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Detection Method:</span>
             <Select value={detectionMethod} onValueChange={setDetectionMethod}>
-              <SelectTrigger className="w-[200px] h-9 border-blue-200 focus:ring-blue-500">
+              <SelectTrigger className="w-[200px] h-9 border-border focus:ring-primary">
                 <SelectValue placeholder="Select Method" />
               </SelectTrigger>
               <SelectContent>
@@ -120,8 +120,8 @@ const SolarEnergyProduction = ({
             </Select>
           </div>
 
-          <div className="flex items-center gap-4 w-full max-w-[450px] bg-blue-50/30 p-2 px-4 rounded-full border border-blue-100/50">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.1em] whitespace-nowrap">
+          <div className="flex items-center gap-4 w-full max-w-[450px] bg-secondary/30 p-2 px-4 rounded-full border border-border">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] whitespace-nowrap">
               {detectionMethod === "window-average"
                 ? `Threshold: ${threshold}% below average`
                 : `Minimum: ${minKwh} kWh`}
@@ -133,23 +133,23 @@ const SolarEnergyProduction = ({
               step="1"
               value={detectionMethod === "window-average" ? threshold : minKwh}
               onChange={(e) => (detectionMethod === "window-average" ? setThreshold(e.target.value) : setMinKwh(e.target.value))}
-              className="flex-1 h-1 bg-blue-100 rounded-full appearance-none cursor-pointer accent-blue-600 hover:accent-blue-700 transition-all"
+              className="flex-1 h-1 bg-secondary rounded-full appearance-none cursor-pointer accent-primary hover:accent-primary/80 transition-all"
             />
           </div>
         </div>
       </div>
 
       {stats && (
-        <div className="mb-6 p-3 bg-blue-50/50 border border-blue-100 rounded-xl flex items-center justify-between text-sm">
+        <div className="mb-6 p-3 bg-secondary/50 border border-border rounded-xl flex items-center justify-between text-sm">
           <div className="flex items-center gap-6">
-            <span className="text-blue-800 font-medium">
+            <span className="text-primary font-medium">
               Window Average: <span className="font-bold">{stats.avg.toFixed(1)} kWh</span>
             </span>
-            <span className="text-blue-800/70">
+            <span className="text-primary/70">
               | Range: <span className="font-medium">{stats.min.toFixed(1)} - {stats.max.toFixed(1)} kWh</span>
             </span>
           </div>
-          <div className="text-blue-800 font-medium">
+          <div className="text-primary font-medium">
             Anomalies: <span className="text-red-600 font-bold">{stats.anomalies}</span> out of 7 days ({stats.anomalyPercentage}%)
           </div>
         </div>

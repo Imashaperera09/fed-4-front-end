@@ -23,7 +23,7 @@ const DashboardPage = () => {
   return (
     <main className="mt-4">
       <h1 className="text-4xl font-bold text-foreground">{user?.firstName}'s House</h1>
-      <p className="text-gray-600 mt-2">Welcome back to your Solar Energy Production Dashboard</p>
+      <p className="text-muted-foreground mt-2">Welcome back to your Solar Energy Production Dashboard</p>
 
       <div className="mt-8">
         <SolarEnergyProduction
