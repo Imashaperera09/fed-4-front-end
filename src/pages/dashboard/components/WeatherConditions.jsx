@@ -1,47 +1,105 @@
 import { Card } from "@/components/ui/card";
+import { Thermometer, Wind, Cloud, Sun, AlertTriangle, Zap } from "lucide-react";
 
-export default function WeatherConditions({ temperature = 12, windSpeed = 8.5, backgroundUrl = "/assests/images/weather1.jpg" }) {
+export default function WeatherConditions({ weatherData, isLoading, isError }) {
+  if (isLoading) {
+    return (
+      <Card className="rounded-xl p-6 h-full animate-pulse bg-gray-100">
+        <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="h-20 bg-gray-200 rounded"></div>
+          <div className="h-20 bg-gray-200 rounded"></div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (isError || !weatherData) {
+    return (
+      <Card className="rounded-xl p-6 h-full flex items-center justify-center text-muted-foreground">
+        <AlertTriangle className="mr-2" /> Failed to load weather data
+      </Card>
+    );
+  }
+
+  const {
+    temperature_2m: temp,
+    wind_speed_10m: wind,
+    cloud_cover: clouds,
+    shortwave_radiation: radiation,
+  } = weatherData;
+
+  // Solar impact logic
+  let impactMessage = "Optimal conditions for solar production.";
+  let impactColor = "text-green-400";
+  let ImpactIcon = Sun;
+
+  if (clouds > 70) {
+    impactMessage = "High cloud cover may reduce energy output.";
+    impactColor = "text-yellow-400";
+    ImpactIcon = Cloud;
+  } else if (radiation < 100) {
+    impactMessage = "Low solar radiation detected.";
+    impactColor = "text-orange-400";
+    ImpactIcon = Cloud;
+  }
+
   return (
-    <Card className="rounded-xl p-0 overflow-hidden">
+    <Card className="rounded-xl p-0 overflow-hidden shadow-lg border-none group">
       <div
-        className="relative h-full w-full"
+        className="relative h-full w-full min-h-[220px]"
         style={{
-          backgroundImage: `url(${backgroundUrl})`,
+          backgroundImage: `url('/assests/solar_panel_bg.png')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        {/* overlay */}
-        <div className="absolute inset-0 bg-white/05" />
-        <div className="relative p-6">
-          <div className="rounded-xl bg-white/20 backdrop-blur-sm p-3 mb-4 border border-white/40 inline-block">
-            <h3 className="text-lg font-semibold text-white">Weather Conditions</h3>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none" />
+        <div className="relative p-6 h-full flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Sun className="w-5 h-5 text-yellow-400" /> Weather & Solar Context
+              </h3>
+              <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 ${impactColor}`}>
+                <ImpactIcon className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Live</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl bg-white/10 backdrop-blur-md p-3 border border-white/20">
+                <div className="flex items-center gap-2 text-[10px] text-white/70 uppercase font-bold tracking-wider mb-1">
+                  <Thermometer className="w-3 h-3" /> Temp
+                </div>
+                <div className="text-xl font-bold text-white">{temp}°C</div>
+              </div>
+              <div className="rounded-xl bg-white/10 backdrop-blur-md p-3 border border-white/20">
+                <div className="flex items-center gap-2 text-[10px] text-white/70 uppercase font-bold tracking-wider mb-1">
+                  <Wind className="w-3 h-3" /> Wind
+                </div>
+                <div className="text-xl font-bold text-white">{wind} <span className="text-xs font-normal">km/h</span></div>
+              </div>
+              <div className="rounded-xl bg-white/10 backdrop-blur-md p-3 border border-white/20">
+                <div className="flex items-center gap-2 text-[10px] text-white/70 uppercase font-bold tracking-wider mb-1">
+                  <Cloud className="w-3 h-3" /> Clouds
+                </div>
+                <div className="text-xl font-bold text-white">{clouds}%</div>
+              </div>
+              <div className="rounded-xl bg-white/10 backdrop-blur-md p-3 border border-white/20">
+                <div className="flex items-center gap-2 text-[10px] text-white/70 uppercase font-bold tracking-wider mb-1">
+                  <Zap className="w-3 h-3" /> Radiation
+                </div>
+                <div className="text-xl font-bold text-white">{radiation} <span className="text-xs font-normal">W/m²</span></div>
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl bg-white/20 backdrop-blur-sm p-4 border border-white/40">
-              <div className="flex items-center gap-2 text-sm text-white/80">
-                {/* temperature icon */}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white/80">
-                  <path d="M14 14.5V5a3 3 0 10-6 0v9.5a4.5 4.5 0 106 0z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M9 10h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <circle cx="11" cy="17.5" r="2.5" fill="currentColor" opacity="0.6" />
-                </svg>
-                <span>Temperature</span>
-              </div>
-              <div className="text-2xl font-bold text-white">{temperature}°C</div>
-            </div>
-            <div className="rounded-xl bg-white/20 backdrop-blur-sm p-4 border border-white/40">
-              <div className="flex items-center gap-2 text-sm text-white/80">
-                {/* wind icon */}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white/80">
-                  <path d="M4 8h8a3 3 0 100-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M2 12h12a3 3 0 110 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M6 16h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-                <span>Wind Speed</span>
-              </div>
-              <div className="text-2xl font-bold text-white">{windSpeed} m/s</div>
-            </div>
+
+          <div className="mt-4 p-3 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm">
+            <p className="text-xs text-white/90 font-medium flex items-center gap-2">
+              <AlertTriangle className={`w-3.5 h-3.5 ${impactColor}`} />
+              {impactMessage}
+            </p>
           </div>
         </div>
       </div>

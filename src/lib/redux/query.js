@@ -58,6 +58,12 @@ export const api = createApi({
     getAllUsers: build.query({
       query: () => `/users`,
     }),
+    getWeatherData: build.query({
+      query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`,
+    }),
+    getCapacityFactor: build.query({
+      query: (id) => `/energy-generation-records/capacity-factor/${id}`,
+    }),
   }),
 });
 
@@ -71,5 +77,7 @@ export const {
   useGetSolarUnitByIdQuery,
   useCreateSolarUnitMutation,
   useEditSolarUnitMutation,
-  useDeleteSolarUnitMutation
+  useDeleteSolarUnitMutation,
+  useGetWeatherDataQuery,
+  useGetCapacityFactorQuery,
 } = api;
