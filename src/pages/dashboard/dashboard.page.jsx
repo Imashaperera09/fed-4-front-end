@@ -42,22 +42,16 @@ const DashboardPage = () => {
 
   return (
     <main className="mt-4 pb-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold text-foreground">{user?.firstName}'s House</h1>
-          <p className="text-muted-foreground mt-2">Welcome back to your Solar Energy Production Dashboard</p>
-        </div>
-        <div className="w-full md:w-80">
-          <WeatherConditions
-            weatherData={weatherData}
-            isLoading={isWeatherLoading}
-            isError={isWeatherError}
-          />
-        </div>
+      {/* Header Section */}
+      <div className="mb-4">
+        <h1 className="text-4xl font-bold text-foreground">{user?.firstName}'s House</h1>
+        <p className="text-muted-foreground mt-2">Welcome back to your Solar Energy Production Dashboard</p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      {/* Main Content Grid - Weather and Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Solar Energy Production */}
+        <div className="lg:col-span-2 space-y-6">
           <SolarEnergyProduction
             data={data}
             isLoading={isLoading}
@@ -70,7 +64,14 @@ const DashboardPage = () => {
             setMinKwh={setMinKwh}
           />
         </div>
-        <div>
+
+        {/* Right Column - Weather Widget and Capacity Factor */}
+        <div className="space-y-6">
+          <WeatherConditions
+            weatherData={weatherData}
+            isLoading={isWeatherLoading}
+            isError={isWeatherError}
+          />
           <CapacityFactorChart
             data={capacityFactorData}
             isLoading={isCapacityLoading}
@@ -79,6 +80,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
+      {/* Energy Production Chart - Full Width */}
       <div className="mt-8">
         <DataChart
           data={data}
