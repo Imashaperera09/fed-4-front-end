@@ -7,21 +7,25 @@ import HomePage from "./pages/home/home.page.jsx";
 import DashboardPage from "./pages/dashboard/dashboard.page.jsx";
 import AnomalyPage from "./pages/dashboard/anomaly.page.jsx";
 import AlexanderHomePage from "./pages/dashboard/alexander-home.page.jsx";
+import InvoicesPage from "./pages/invoices/invoices.page.jsx";
+import PaymentSuccessPage from "./pages/invoices/payment-success.page.jsx";
+import PaymentFailurePage from "./pages/invoices/payment-failure.page.jsx";
 
 import RootLayout from "./layouts/RootLayout.jsx";
 import MainLayout from "./layouts/main.layout.jsx";
 import DashboardLayout from "./layouts/dashboard.layout.jsx";
-import AdminLayout from "./layouts/admin.layout.jsx";
+import AdminLayout from "./admin/layouts/admin.layout.jsx";
 import SignInPage from "./pages/auth/sign-in-page.jsx";
 import SignUpPage from "./pages/auth/sign-up-page.jsx";
-import SolarUnitsPage from "./pages/admin/solar-units.page.jsx";
-import SettingsPage from "./pages/admin/settings.page.jsx";
-import SolarUnitDetailPage from "./pages/admin/solar-unit-detail.page.jsx";
-import AuthorizedLayout from "./layouts/authorized.layout.jsx";
+import SolarUnitsPage from "./admin/pages/solar-units.page.jsx";
+import SettingsPage from "./admin/pages/settings.page.jsx";
+import SolarUnitDetailPage from "./admin/pages/solar-unit-detail.page.jsx";
+import AuthorizedLayout from "./admin/layouts/authorized.layout.jsx";
 import ProtectedLayout from "./layouts/protected.layout.jsx";
-import AdminPage from "./pages/admin/admin.page.jsx";
-import SolarUnitEditPage from "./pages/admin/solar-unit-edit.page.jsx";
-import SolarUnitCreatePage from "./pages/admin/solar-unit-create.page.jsx";
+import AdminPage from "./admin/pages/admin.page.jsx";
+import SolarUnitEditPage from "./admin/pages/solar-unit-edit.page.jsx";
+import SolarUnitCreatePage from "./admin/pages/solar-unit-create.page.jsx";
+import AdminInvoicesPage from "./admin/pages/invoices.page.jsx";
 
 import { store } from "@/lib/redux/store.js";
 import { Provider } from "react-redux";
@@ -51,6 +55,9 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/dashboard/anomaly" element={<AnomalyPage />} />
                   <Route path="/dashboard/alexander" element={<AlexanderHomePage />} />
+                  <Route path="/dashboard/invoices" element={<InvoicesPage />} />
+                  <Route path="/dashboard/invoices/success" element={<PaymentSuccessPage />} />
+                  <Route path="/dashboard/invoices/failure" element={<PaymentFailurePage />} />
                 </Route>
                 <Route element={<AuthorizedLayout />}>
                   <Route element={<AdminLayout />}>
@@ -60,6 +67,7 @@ createRoot(document.getElementById("root")).render(
                     <Route path="/dashboard/admin/solar-units/:id/edit" element={<SolarUnitEditPage />} />
                     <Route path="/dashboard/admin/solar-units/create" element={<SolarUnitCreatePage />} />
                     <Route path="/dashboard/admin/settings" element={<SettingsPage />} />
+                    <Route path="/dashboard/admin/invoices" element={<AdminInvoicesPage />} />
                   </Route>
                 </Route>
               </Route>

@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Bell, Lock, Database, Save, X, ShieldCheck, History } from "lucide-react";
 
-export function SettingsTab() {
+export function SettingsTab({ icons }) {
+  const { Settings, Bell, Lock, Database, Save, X, ShieldCheck, History } = icons || {};
+
   const [settings, setSettings] = useState({
     appName: "SolarNova Admin",
     maintenanceMode: false,
@@ -22,6 +23,8 @@ export function SettingsTab() {
     console.log("Settings saved:", settings);
     alert("Settings saved successfully!");
   };
+
+  if (!icons) return null;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">

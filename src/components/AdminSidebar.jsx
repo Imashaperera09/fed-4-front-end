@@ -1,4 +1,4 @@
-import { Settings, Zap } from "lucide-react";
+import { Settings, Zap, Receipt } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -17,6 +17,11 @@ const items = [
     title: "Solar Units",
     url: "/dashboard/admin/solar-units",
     icon: <Zap className="w-8 h-8" size={32} />,
+  },
+  {
+    title: "Invoices",
+    url: "/dashboard/admin/invoices",
+    icon: <Receipt className="w-8 h-8" size={32} />,
   },
   {
     title: "Settings",

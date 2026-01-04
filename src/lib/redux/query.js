@@ -64,6 +64,25 @@ export const api = createApi({
     getCapacityFactor: build.query({
       query: (id) => `/energy-generation-records/capacity-factor/${id}`,
     }),
+    getInvoices: build.query({
+      query: (userId) => userId ? `/invoices?userId=${userId}` : `/invoices`,
+      providesTags: ["Invoice"],
+    }),
+    createPaymentIntent: build.mutation({
+      query: (data) => ({
+        url: `/invoices/create-payment-intent`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    generateInvoice: build.mutation({
+      query: (data) => ({
+        url: `/invoices/generate`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Invoice"],
+    }),
   }),
 });
 
@@ -80,4 +99,7 @@ export const {
   useDeleteSolarUnitMutation,
   useGetWeatherDataQuery,
   useGetCapacityFactorQuery,
+  useGetInvoicesQuery,
+  useCreatePaymentIntentMutation,
+  useGenerateInvoiceMutation,
 } = api;

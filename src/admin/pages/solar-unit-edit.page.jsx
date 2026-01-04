@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { EditSolarUnitForm } from "./components/EditSolarUnitForm";
+import { EditSolarUnitForm } from "../components/EditSolarUnitForm";
 import { useGetSolarUnitByIdQuery } from "@/lib/redux/query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";

@@ -1,4 +1,4 @@
-import { ChartLine, LayoutDashboard, TriangleAlert, Users, Wind } from "lucide-react";
+import { ChartLine, LayoutDashboard, TriangleAlert, Users, Wind, Receipt } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -34,6 +34,11 @@ const items = [
     url: "/dashboard/analytics",
     icon: <ChartLine className="w-4 h-4" />,
     badge: "NEW",
+  },
+  {
+    title: "Invoices",
+    url: "/dashboard/invoices",
+    icon: <Receipt className="w-4 h-4" />,
   },
 ];
 
