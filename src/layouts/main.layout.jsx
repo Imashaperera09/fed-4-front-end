@@ -7,7 +7,7 @@ export default function MainLayout() {
     <>
       <Navigation />
       <Outlet />
-    
+      <Footer />
     </>
   );
 };

@@ -1,14 +1,18 @@
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "../components/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "../components/ui/sidebar";
+import Footer from "../pages/home/Footer/Footer";
 
 export default function DashboardLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="p-4 w-full bg-background transition-colors duration-300">
-        <SidebarTrigger className="w-8 h-8 block" size={32} />
-        <Outlet />
+      <main className="p-4 w-full bg-background transition-colors duration-300 flex flex-col min-h-screen">
+        <div className="flex-1">
+          <SidebarTrigger className="w-8 h-8 block" size={32} />
+          <Outlet />
+        </div>
+        <Footer />
       </main>
     </SidebarProvider>
   );

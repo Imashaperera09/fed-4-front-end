@@ -5,9 +5,7 @@ import Footer from '../pages/home/Footer/Footer';
 const RootLayout = () => {
   return (
     <>
-      
       <Outlet />
-      <Footer />
     </>
   );
 };

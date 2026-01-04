@@ -51,12 +51,15 @@ export function AdminSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="h-16 flex items-center px-4 mb-2">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 flex items-center justify-center overflow-hidden">
+          <SidebarGroupLabel className="h-32 flex items-center px-4 mb-2">
+            <Link to="/" className="flex items-center gap-4 group">
+              <div className="w-20 h-20 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-110">
                 <img src="/assests/logo.png" alt="SolarNova Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-foreground">SolarNova</span>
+              <span className="text-2xl font-extrabold tracking-tighter flex items-center">
+                <span className="text-orange-500">Solar</span>
+                <span className="text-blue-600">Nova</span>
+              </span>
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>

@@ -8,11 +8,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Smart Energy Logo and Description */}
           <div className="col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+            <div className="flex items-center gap-4 mb-4 group">
+              <div className="w-20 h-20 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-110">
                 <img src="/assests/logo.png" alt="SolarNova Logo" className="w-full h-full object-contain" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground">SolarNova</h3>
+              <h3 className="text-2xl font-extrabold tracking-tighter flex items-center">
+                <span className="text-orange-500">Solar</span>
+                <span className="text-blue-600">Nova</span>
+              </h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
               Revolutionizing wind farm management through advanced digital twin technology and predictive insights.
@@ -47,12 +50,12 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-4">Solutions</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground">Digital Twin Platform</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Predictive Analytics</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Remote Monitoring</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Performance Optimization</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Real-time Alerts</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Maintenance Planning</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Digital Twin Platform</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Predictive Analytics</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Remote Monitoring</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Performance Optimization</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Real-time Alerts</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Maintenance Planning</a></li>
             </ul>
           </div>
 
@@ -60,12 +63,12 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-4">Resources</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground">Documentation</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">API Reference</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Case Studies</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">White Papers</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Blog</a></li>
-              <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900">Support Center</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Documentation</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">API Reference</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Case Studies</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">White Papers</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</a></li>
+              <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Support Center</a></li>
             </ul>
           </div>
 

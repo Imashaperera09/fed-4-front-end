@@ -89,13 +89,14 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="w-64 border-r border-sidebar-border bg-sidebar">
-      <SidebarHeader className="h-16 border-b border-sidebar-border flex items-center px-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+      <SidebarHeader className="h-32 border-b border-sidebar-border flex items-center px-4">
+        <div className="flex items-center gap-4 group">
+          <div className="w-20 h-20 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-110">
             <img src="/assests/logo.png" alt="SolarNova Logo" className="w-full h-full object-contain" />
           </div>
-          <Link to="/" className="text-xl font-bold tracking-tight text-sidebar-foreground">
-            SolarNova
+          <Link to="/" className="text-2xl font-extrabold tracking-tighter flex items-center">
+            <span className="text-orange-500">Solar</span>
+            <span className="text-blue-600">Nova</span>
           </Link>
         </div>
       </SidebarHeader>
