@@ -28,6 +28,7 @@ import AdminPage from "./admin/pages/admin.page.jsx";
 import SolarUnitEditPage from "./admin/pages/solar-unit-edit.page.jsx";
 import SolarUnitCreatePage from "./admin/pages/solar-unit-create.page.jsx";
 import AdminInvoicesPage from "./admin/pages/invoices.page.jsx";
+import AdminAnomaliesPage from "./admin/pages/anomalies.page.jsx";
 
 import { store } from "@/lib/redux/store.js";
 import { Provider } from "react-redux";
@@ -72,6 +73,7 @@ createRoot(document.getElementById("root")).render(
                     <Route path="/dashboard/admin/solar-units/create" element={<SolarUnitCreatePage />} />
                     <Route path="/dashboard/admin/settings" element={<SettingsPage />} />
                     <Route path="/dashboard/admin/invoices" element={<AdminInvoicesPage />} />
+                    <Route path="/dashboard/admin/anomalies" element={<AdminAnomaliesPage />} />
                   </Route>
                 </Route>
               </Route>

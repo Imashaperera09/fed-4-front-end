@@ -1,4 +1,4 @@
-import { Settings, Zap, Receipt } from "lucide-react";
+import { Settings, Zap, Receipt, TriangleAlert } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -22,6 +22,11 @@ const items = [
     title: "Invoices",
     url: "/dashboard/admin/invoices",
     icon: <Receipt className="w-8 h-8" size={32} />,
+  },
+  {
+    title: "Anomalies",
+    url: "/dashboard/admin/anomalies",
+    icon: <TriangleAlert className="w-8 h-8" size={32} />,
   },
   {
     title: "Settings",
