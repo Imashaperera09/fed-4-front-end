@@ -83,6 +83,16 @@ export const api = createApi({
       }),
       invalidatesTags: ["Invoice"],
     }),
+    createPaymentSession: build.mutation({
+      query: (data) => ({
+        url: `/payments/create-checkout-session`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getSessionStatus: build.query({
+      query: (sessionId) => `/payments/session-status?session_id=${sessionId}`,
+    }),
   }),
 });
 
@@ -102,4 +112,6 @@ export const {
   useGetInvoicesQuery,
   useCreatePaymentIntentMutation,
   useGenerateInvoiceMutation,
+  useCreatePaymentSessionMutation,
+  useGetSessionStatusQuery,
 } = api;

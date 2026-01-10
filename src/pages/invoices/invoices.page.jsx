@@ -1,31 +1,19 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetInvoicesQuery } from "@/lib/redux/query";
 import { useUser } from "@clerk/clerk-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import PaymentModal from "./components/PaymentModal";
 import { Loader2, FileText, CheckCircle, AlertCircle } from "lucide-react";
-
-// Initialize Stripe (replace with your publishable key)
-const stripePromise = loadStripe("pk_test_placeholder");
 
 const InvoicesPage = () => {
     const { user } = useUser();
-    const { data: invoices, isLoading, isError, refetch } = useGetInvoicesQuery(user?.id);
-    const [selectedInvoice, setSelectedInvoice] = useState(null);
-    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const { data: invoices, isLoading, isError } = useGetInvoicesQuery(user?.id);
+    const navigate = useNavigate();
 
     const handlePayClick = (invoice) => {
-        setSelectedInvoice(invoice);
-        setIsPaymentModalOpen(true);
-    };
-
-    const handlePaymentSuccess = () => {
-        refetch(); // Refresh invoices list
+        navigate(`/dashboard/invoices/${invoice._id}/pay`);
     };
 
     if (isLoading) {
@@ -121,18 +109,6 @@ const InvoicesPage = () => {
                     ))
                 )}
             </div>
-
-            {/* Payment Modal wrapped in Elements provider */}
-            {selectedInvoice && (
-                <Elements stripe={stripePromise}>
-                    <PaymentModal
-                        invoice={selectedInvoice}
-                        isOpen={isPaymentModalOpen}
-                        onClose={() => setIsPaymentModalOpen(false)}
-                        onSuccess={handlePaymentSuccess}
-                    />
-                </Elements>
-            )}
         </main>
     );
 };

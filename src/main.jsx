@@ -8,6 +8,8 @@ import DashboardPage from "./pages/dashboard/dashboard.page.jsx";
 import AnomalyPage from "./pages/dashboard/anomaly.page.jsx";
 import AlexanderHomePage from "./pages/dashboard/alexander-home.page.jsx";
 import InvoicesPage from "./pages/invoices/invoices.page.jsx";
+import PaymentPage from "./pages/invoices/payment.page.jsx";
+import PaymentCompletePage from "./pages/invoices/complete.page.jsx";
 import PaymentSuccessPage from "./pages/invoices/payment-success.page.jsx";
 import PaymentFailurePage from "./pages/invoices/payment-failure.page.jsx";
 
@@ -56,6 +58,8 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/dashboard/anomaly" element={<AnomalyPage />} />
                   <Route path="/dashboard/alexander" element={<AlexanderHomePage />} />
                   <Route path="/dashboard/invoices" element={<InvoicesPage />} />
+                  <Route path="/dashboard/invoices/:id/pay" element={<PaymentPage />} />
+                  <Route path="/dashboard/invoices/complete" element={<PaymentCompletePage />} />
                   <Route path="/dashboard/invoices/success" element={<PaymentSuccessPage />} />
                   <Route path="/dashboard/invoices/failure" element={<PaymentFailurePage />} />
                 </Route>
