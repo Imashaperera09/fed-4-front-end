@@ -41,8 +41,18 @@ const AdminSideBarTab = ({ item }) => {
 
   return (
     <SidebarMenuItem key={item.url}>
-      <SidebarMenuButton asChild isActive={isActive}>
-        <Link to={item.url}>
+      <SidebarMenuButton
+        asChild
+        isActive={isActive}
+        className={`
+          relative w-full justify-start text-sm font-medium transition-colors rounded-md
+          ${isActive
+            ? 'bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent'
+            : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/50'
+          }
+        `}
+      >
+        <Link to={item.url} className="flex items-center gap-3 px-3 py-2">
           {item.icon}
           <span>{item.title}</span>
         </Link>
