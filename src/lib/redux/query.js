@@ -17,7 +17,7 @@ export const api = createApi({
       return headers;
     }
   }),
-  tagTypes: ["SolarUnit", "Invoice", "Anomaly"],
+  tagTypes: ["SolarUnit", "Invoice", "Anomaly", "Settings"],
   endpoints: (build) => ({
     getEnergyGenerationRecordsBySolarUnit: build.query({
       query: ({ id, groupBy, limit }) => `/energy-generation-records/solar-unit/${id}?groupBy=${groupBy}&limit=${limit}`,
@@ -108,6 +108,18 @@ export const api = createApi({
       }),
       invalidatesTags: ["Anomaly"],
     }),
+    getSettings: build.query({
+      query: () => `/settings`,
+      providesTags: ["Settings"],
+    }),
+    updateSettings: build.mutation({
+      query: (data) => ({
+        url: `/settings`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Settings"],
+    }),
   }),
 });
 
@@ -132,4 +144,6 @@ export const {
   useGetAnomaliesQuery,
   useGetAnomaliesForUserQuery,
   useResolveAnomalyMutation,
+  useGetSettingsQuery,
+  useUpdateSettingsMutation,
 } = api;

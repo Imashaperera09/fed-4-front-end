@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useGetSettingsQuery, useUpdateSettingsMutation } from "@/lib/redux/query";
 
 export function SettingsTab({ icons }) {
   const { Settings, Bell, Lock, Database, Save, X, ShieldCheck, History } = icons || {};
+
+  const { data: fetchedSettings, isLoading } = useGetSettingsQuery();
+  const [updateSettings, { isLoading: isSaving }] = useUpdateSettingsMutation();
 
   const [settings, setSettings] = useState({
     appName: "SolarNova Admin",
@@ -14,17 +18,28 @@ export function SettingsTab({ icons }) {
     logRetention: "30",
   });
 
+  useEffect(() => {
+    if (fetchedSettings) {
+      setSettings(fetchedSettings);
+    }
+  }, [fetchedSettings]);
+
   const handleChange = (key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSave = () => {
-    // TODO: Implement API call to save settings
-    console.log("Settings saved:", settings);
-    alert("Settings saved successfully!");
+  const handleSave = async () => {
+    try {
+      await updateSettings(settings).unwrap();
+      alert("Settings saved successfully!");
+    } catch (error) {
+      console.error("Failed to save settings:", error);
+      alert("Failed to save settings.");
+    }
   };
 
   if (!icons) return null;
+  if (isLoading) return <div className="p-8 text-center">Loading settings...</div>;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
@@ -183,9 +198,9 @@ export function SettingsTab({ icons }) {
           <X className="w-4 h-4 mr-2" />
           Cancel
         </Button>
-        <Button onClick={handleSave} className="bg-primary shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all px-8 py-6 h-auto font-bold">
+        <Button onClick={handleSave} disabled={isSaving} className="bg-primary shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all px-8 py-6 h-auto font-bold">
           <Save className="w-4 h-4 mr-2" />
-          Save Settings
+          {isSaving ? "Saving..." : "Save Settings"}
         </Button>
       </div>
     </div>
