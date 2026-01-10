@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 
 // Menu items for admin navigation.
@@ -86,6 +87,17 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border mt-auto p-4">
+        <div className="flex items-center gap-3 w-full">
+          <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">AD</span>
+          </div>
+          <div className="flex-1">
+            <div className="text-sm font-medium text-sidebar-foreground">System Admin</div>
+            <div className="text-xs text-sidebar-foreground/60">admin@solarnova.com</div>
+          </div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
