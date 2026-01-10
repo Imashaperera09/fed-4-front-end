@@ -7,7 +7,8 @@ import {
     TrendingDown,
     MapPin,
     History,
-    Filter
+    Filter,
+    CheckCircle2
 } from "lucide-react";
 import {
     PieChart,
@@ -22,76 +23,86 @@ import {
     Tooltip,
     Legend
 } from "recharts";
-
-const stats = [
-    {
-        title: "Active Anomalies",
-        value: "3",
-        icon: <TriangleAlert className="w-5 h-5 text-red-500" />,
-        color: "text-red-600",
-        bgColor: "bg-red-50",
-    },
-    {
-        title: "Under Review",
-        value: "1",
-        icon: <Clock className="w-5 h-5 text-yellow-500" />,
-        color: "text-yellow-600",
-        bgColor: "bg-yellow-50",
-    },
-    {
-        title: "Resolved Today",
-        value: "5",
-        icon: <TrendingDown className="w-5 h-5 text-green-500" />,
-        color: "text-green-600",
-        bgColor: "bg-green-50",
-    },
-];
-
-const pieData = [
-    { name: "Mechanical", value: 15, color: "#3b82f6" },
-    { name: "Power Output", value: 28, color: "#f59e0b" },
-    { name: "Temperature", value: 22, color: "#10b981" },
-    { name: "Vibration", value: 35, color: "#ef4444" },
-];
-
-const lineData = [
-    { name: "Mon", value: 8 },
-    { name: "Tue", value: 12 },
-    { name: "Wed", value: 6 },
-    { name: "Thu", value: 15 },
-    { name: "Fri", value: 9 },
-    { name: "Sat", value: 4 },
-    { name: "Sun", value: 3 },
-];
-
-const recentAnomalies = [
-    {
-        id: 1,
-        title: "Unusual Vibration Pattern",
-        severity: "High",
-        status: "Active",
-        location: "Turbine #27, Sector B",
-        time: "2 hours ago",
-        description: "Detected abnormal vibration levels during peak wind conditions",
-    },
-    {
-        id: 2,
-        title: "Power Output Deviation",
-        severity: "Medium",
-        status: "Under Review",
-        location: "Turbine #14, Sector A",
-        time: "5 hours ago",
-        description: "Energy generation dropped 15% below expected output for current conditions",
-    },
-];
+import { useGetAnomaliesForUserQuery, useResolveAnomalyMutation } from "@/lib/redux/query";
+import { format } from "date-fns";
+import { useState } from "react";
 
 export default function AnomalyPage() {
+    const { data: anomalies = [], isLoading } = useGetAnomaliesForUserQuery();
+    const [resolveAnomaly] = useResolveAnomalyMutation();
+    const [filterStatus, setFilterStatus] = useState("ALL");
+
+    const filteredAnomalies = anomalies.filter(a => {
+        if (filterStatus === "ALL") return true;
+        return a.status === filterStatus;
+    });
+
+    const activeAnomalies = anomalies.filter(a => a.status === "OPEN");
+    const resolvedAnomalies = anomalies.filter(a => a.status === "RESOLVED");
+
+    const stats = [
+        {
+            title: "Active Anomalies",
+            value: activeAnomalies.length.toString(),
+            icon: <TriangleAlert className="w-5 h-5 text-red-500" />,
+            color: "text-red-600",
+            bgColor: "bg-red-50",
+        },
+        {
+            title: "Resolved",
+            value: resolvedAnomalies.length.toString(),
+            icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
+            color: "text-green-600",
+            bgColor: "bg-green-50",
+        },
+        {
+            title: "Total Detected",
+            value: anomalies.length.toString(),
+            icon: <History className="w-5 h-5 text-blue-500" />,
+            color: "text-blue-600",
+            bgColor: "bg-blue-50",
+        },
+    ];
+
+    const typeDistribution = anomalies.reduce((acc, curr) => {
+        const existing = acc.find(item => item.name === curr.type);
+        if (existing) {
+            existing.value += 1;
+        } else {
+            acc.push({ name: curr.type, value: 1 });
+        }
+        return acc;
+    }, []);
+
+    const COLORS = ["#ef4444", "#f59e0b", "#3b82f6", "#10b981"];
+
+    const trendData = anomalies.reduce((acc, curr) => {
+        const date = format(new Date(curr.timestamp), "MMM dd");
+        const existing = acc.find(item => item.name === date);
+        if (existing) {
+            existing.value += 1;
+        } else {
+            acc.push({ name: date, value: 1 });
+        }
+        return acc;
+    }, []).slice(-7);
+
+    const handleResolve = async (id) => {
+        try {
+            await resolveAnomaly(id).unwrap();
+        } catch (err) {
+            console.error("Failed to resolve anomaly:", err);
+        }
+    };
+
+    if (isLoading) return <div className="p-8 text-center">Loading anomalies...</div>;
+
     return (
         <main className="p-8 space-y-8 animate-in fade-in duration-700">
             {/* Header */}
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900">Anomaly Detection</h1>
-                <p className="text-gray-500">Monitor and investigate unusual patterns in wind turbine operations.</p>
+                <p className="text-gray-500">Monitor and manage irregular patterns in your solar energy generation.</p>
             </div>
 
             {/* Stats Cards */}
@@ -117,15 +128,12 @@ export default function AnomalyPage() {
                 <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-lg font-semibold">Anomaly Types Distribution</CardTitle>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Filter className="h-4 w-4 text-gray-400" />
-                        </Button>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
-                                    data={pieData}
+                                    data={typeDistribution}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={70}
@@ -134,8 +142,8 @@ export default function AnomalyPage() {
                                     dataKey="value"
                                     stroke="none"
                                 >
-                                    {pieData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    {typeDistribution.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
                                 <Tooltip
@@ -156,20 +164,11 @@ export default function AnomalyPage() {
                 {/* Area Chart */}
                 <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-lg font-semibold">Anomaly Trends</CardTitle>
-                        <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <TrendingDown className="h-4 w-4 text-gray-400" />
-                            </Button>
-                            <select className="text-xs font-bold uppercase tracking-widest bg-transparent border-none focus:ring-0 cursor-pointer text-gray-400">
-                                <option>Weekly</option>
-                                <option>Daily</option>
-                            </select>
-                        </div>
+                        <CardTitle className="text-lg font-semibold">Detection Trends (Last 7 Days)</CardTitle>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={lineData} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
+                            <AreaChart data={trendData} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
@@ -211,41 +210,74 @@ export default function AnomalyPage() {
 
             {/* Recent Anomalies List */}
             <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-                <CardHeader>
-                    <CardTitle className="text-lg font-semibold">Recent Anomalies</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle className="text-lg font-semibold">Detected Anomalies</CardTitle>
+                    <div className="flex gap-2">
+                        <Button
+                            variant={filterStatus === "ALL" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setFilterStatus("ALL")}
+                        >
+                            All
+                        </Button>
+                        <Button
+                            variant={filterStatus === "OPEN" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setFilterStatus("OPEN")}
+                        >
+                            Open
+                        </Button>
+                        <Button
+                            variant={filterStatus === "RESOLVED" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setFilterStatus("RESOLVED")}
+                        >
+                            Resolved
+                        </Button>
+                    </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {recentAnomalies.map((anomaly) => (
-                        <div key={anomaly.id} className="p-4 rounded-xl border border-gray-100 bg-white/30 hover:bg-white/50 transition-all group">
-                            <div className="flex items-start justify-between mb-2">
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <h3 className="font-bold text-gray-900">{anomaly.title}</h3>
-                                        <Badge variant="secondary" className={anomaly.severity === 'High' ? 'bg-red-50 text-red-600 border-red-100' : 'bg-yellow-50 text-yellow-600 border-yellow-100'}>
-                                            {anomaly.severity}
-                                        </Badge>
-                                        <Badge variant="outline" className="text-gray-500 border-gray-200">
-                                            {anomaly.status}
-                                        </Badge>
-                                    </div>
-                                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                                        <div className="flex items-center gap-1">
-                                            <MapPin className="w-3 h-3" />
-                                            {anomaly.location}
+                    {filteredAnomalies.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500">No anomalies found.</div>
+                    ) : (
+                        filteredAnomalies.map((anomaly) => (
+                            <div key={anomaly._id} className="p-4 rounded-xl border border-gray-100 bg-white/30 hover:bg-white/50 transition-all group">
+                                <div className="flex items-start justify-between mb-2">
+                                    <div className="space-y-1">
+                                        <div className="flex items-center gap-3">
+                                            <h3 className="font-bold text-gray-900">{anomaly.type.replace(/_/g, ' ')}</h3>
+                                            <Badge variant="secondary" className={
+                                                anomaly.severity === 'CRITICAL' ? 'bg-red-50 text-red-600 border-red-100' :
+                                                    anomaly.severity === 'WARNING' ? 'bg-yellow-50 text-yellow-600 border-yellow-100' :
+                                                        'bg-blue-50 text-blue-600 border-blue-100'
+                                            }>
+                                                {anomaly.severity}
+                                            </Badge>
+                                            <Badge variant="outline" className={anomaly.status === 'OPEN' ? 'text-orange-500 border-orange-200' : 'text-green-500 border-green-200'}>
+                                                {anomaly.status}
+                                            </Badge>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <History className="w-3 h-3" />
-                                            {anomaly.time}
+                                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                                            <div className="flex items-center gap-1">
+                                                <History className="w-3 h-3" />
+                                                {format(new Date(anomaly.timestamp), "PPP p")}
+                                            </div>
                                         </div>
                                     </div>
+                                    {anomaly.status === 'OPEN' && (
+                                        <Button
+                                            size="sm"
+                                            className="bg-green-600 hover:bg-green-700 text-white font-semibold"
+                                            onClick={() => handleResolve(anomaly._id)}
+                                        >
+                                            Resolve
+                                        </Button>
+                                    )}
                                 </div>
-                                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                    Investigate
-                                </Button>
+                                <p className="text-sm text-gray-600">{anomaly.description}</p>
                             </div>
-                            <p className="text-sm text-gray-600">{anomaly.description}</p>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </CardContent>
             </Card>
         </main>

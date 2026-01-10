@@ -17,7 +17,7 @@ export const api = createApi({
       return headers;
     }
   }),
-  tagTypes: ["SolarUnit"],
+  tagTypes: ["SolarUnit", "Invoice", "Anomaly"],
   endpoints: (build) => ({
     getEnergyGenerationRecordsBySolarUnit: build.query({
       query: ({ id, groupBy, limit }) => `/energy-generation-records/solar-unit/${id}?groupBy=${groupBy}&limit=${limit}`,
@@ -93,6 +93,21 @@ export const api = createApi({
     getSessionStatus: build.query({
       query: (sessionId) => `/payments/session-status?session_id=${sessionId}`,
     }),
+    getAnomalies: build.query({
+      query: () => `/anomalies`,
+      providesTags: ["Anomaly"],
+    }),
+    getAnomaliesForUser: build.query({
+      query: () => `/anomalies/user`,
+      providesTags: ["Anomaly"],
+    }),
+    resolveAnomaly: build.mutation({
+      query: (id) => ({
+        url: `/anomalies/${id}/resolve`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Anomaly"],
+    }),
   }),
 });
 
@@ -114,4 +129,7 @@ export const {
   useGenerateInvoiceMutation,
   useCreatePaymentSessionMutation,
   useGetSessionStatusQuery,
+  useGetAnomaliesQuery,
+  useGetAnomaliesForUserQuery,
+  useResolveAnomalyMutation,
 } = api;

@@ -2,7 +2,8 @@ import { useState } from "react";
 import {
   useGetEnergyGenerationRecordsBySolarUnitQuery,
   useGetWeatherDataQuery,
-  useGetCapacityFactorQuery
+  useGetCapacityFactorQuery,
+  useGetSolarUnitForUserQuery
 } from "@/lib/redux/query";
 import SolarEnergyProduction from "@/components/SolarEnergyProduction";
 import DataChart from "./components/DataChart";
@@ -13,7 +14,14 @@ import { useUser } from "@clerk/clerk-react";
 const DashboardPage = () => {
   const { user } = useUser();
 
-  const solarUnitId = "694bdfb6ba06aedb2ca56922";
+  // Fetch user's solar unit
+  const {
+    data: solarUnit,
+    isLoading: isUnitLoading,
+    isError: isUnitError
+  } = useGetSolarUnitForUserQuery();
+
+  const solarUnitId = solarUnit?._id;
 
   // Lifted Anomaly Detection State
   const [detectionMethod, setDetectionMethod] = useState("window-average");
@@ -21,10 +29,10 @@ const DashboardPage = () => {
   const [minKwh, setMinKwh] = useState(5); // 5 kWh for absolute threshold
 
   // Fetch energy data
-  const { data, isLoading, isError, error } = useGetEnergyGenerationRecordsBySolarUnitQuery({
-    id: solarUnitId,
-    groupBy: "date",
-  });
+  const { data, isLoading, isError, error } = useGetEnergyGenerationRecordsBySolarUnitQuery(
+    { id: solarUnitId, groupBy: "date" },
+    { skip: !solarUnitId }
+  );
 
   // Fetch weather data (Berlin coordinates as default)
   const {
@@ -38,7 +46,15 @@ const DashboardPage = () => {
     data: capacityFactorData,
     isLoading: isCapacityLoading,
     isError: isCapacityError
-  } = useGetCapacityFactorQuery(solarUnitId);
+  } = useGetCapacityFactorQuery(solarUnitId, { skip: !solarUnitId });
+
+  if (isUnitLoading) return <div className="p-8 text-center">Loading your solar unit...</div>;
+  if (isUnitError || !solarUnit) return (
+    <div className="p-8 text-center text-red-500">
+      Error: Could not find a solar unit for your account.
+      Please ensure your unit is correctly linked.
+    </div>
+  );
 
   return (
     <main className="mt-4 pb-12">
