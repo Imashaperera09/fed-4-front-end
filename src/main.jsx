@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home/home.page.jsx";
 import DashboardPage from "./pages/dashboard/dashboard.page.jsx";
 import AnomalyPage from "./pages/dashboard/anomaly.page.jsx";
+import AnalyticsPage from "./pages/dashboard/analytics.page.jsx";
 import AlexanderHomePage from "./pages/dashboard/alexander-home.page.jsx";
 import InvoicesPage from "./pages/invoices/invoices.page.jsx";
 import PaymentPage from "./pages/invoices/payment.page.jsx";
@@ -63,6 +64,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/dashboard/invoices/complete" element={<PaymentCompletePage />} />
                   <Route path="/dashboard/invoices/success" element={<PaymentSuccessPage />} />
                   <Route path="/dashboard/invoices/failure" element={<PaymentFailurePage />} />
+                  <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
                 </Route>
                 <Route element={<AuthorizedLayout />}>
                   <Route element={<AdminLayout />}>
