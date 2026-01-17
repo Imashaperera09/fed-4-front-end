@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useGetInvoicesQuery, useGetAllUsersQuery, useGetSolarUnitsQuery, useGenerateInvoiceMutation } from "@/lib/redux/query";
+import { useGetInvoicesQuery, useGetAllUsersQuery, useGetSolarUnitsQuery, useGenerateInvoiceMutation, useAutoGenerateInvoicesMutation } from "@/lib/redux/query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { format } from "date-fns";
-import { Loader2, FileText, CheckCircle, AlertCircle, XCircle, Filter, Plus } from "lucide-react";
+import { Loader2, FileText, CheckCircle, AlertCircle, XCircle, Filter, Plus, RefreshCw } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -21,6 +21,7 @@ const AdminInvoicesPage = () => {
     const { data: users, isLoading: isLoadingUsers } = useGetAllUsersQuery();
     const { data: solarUnits, isLoading: isLoadingUnits } = useGetSolarUnitsQuery();
     const [generateInvoice, { isLoading: isGenerating }] = useGenerateInvoiceMutation();
+    const [autoGenerateInvoices, { isLoading: isAutoGenerating }] = useAutoGenerateInvoicesMutation();
 
     const [statusFilter, setStatusFilter] = useState("ALL");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -49,6 +50,23 @@ const AdminInvoicesPage = () => {
         } catch (error) {
             console.error("Failed to generate invoice:", error);
             alert("Failed to generate invoice. Please try again.");
+        }
+    };
+
+    const handleAutoGenerate = async () => {
+        if (!confirm("This will generate invoices for all eligible solar units. Continue?")) {
+            return;
+        }
+        try {
+            const result = await autoGenerateInvoices().unwrap();
+            alert(
+                `Auto-generation completed!\n` +
+                `Generated ${result.results.invoicesGenerated} invoices.\n` +
+                `Success: ${result.results.successCount}, Errors: ${result.results.errorCount}`
+            );
+        } catch (error) {
+            console.error("Failed to auto-generate invoices:", error);
+            alert("Failed to auto-generate invoices. Please try again.");
         }
     };
 
@@ -83,6 +101,25 @@ const AdminInvoicesPage = () => {
                             </SelectContent>
                         </Select>
                     </div>
+
+                    <Button
+                        variant="outline"
+                        onClick={handleAutoGenerate}
+                        disabled={isAutoGenerating}
+                        className="border-primary text-primary hover:bg-primary hover:text-white"
+                    >
+                        {isAutoGenerating ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Auto-Generating...
+                            </>
+                        ) : (
+                            <>
+                                <RefreshCw className="w-4 h-4 mr-2" />
+                                Auto-Generate All
+                            </>
+                        )}
+                    </Button>
 
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>

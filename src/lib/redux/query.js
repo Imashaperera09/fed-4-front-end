@@ -83,6 +83,13 @@ export const api = createApi({
       }),
       invalidatesTags: ["Invoice"],
     }),
+    autoGenerateInvoices: build.mutation({
+      query: () => ({
+        url: `/invoices/auto-generate`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Invoice"],
+    }),
     createPaymentSession: build.mutation({
       query: (data) => ({
         url: `/payments/create-checkout-session`,
@@ -139,6 +146,7 @@ export const {
   useGetInvoicesQuery,
   useCreatePaymentIntentMutation,
   useGenerateInvoiceMutation,
+  useAutoGenerateInvoicesMutation,
   useCreatePaymentSessionMutation,
   useGetSessionStatusQuery,
   useGetAnomaliesQuery,
