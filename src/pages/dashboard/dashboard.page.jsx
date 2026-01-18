@@ -10,6 +10,8 @@ import DataChart from "./components/DataChart";
 import WeatherConditions from "./components/WeatherConditions";
 import CapacityFactorChart from "./components/CapacityFactorChart";
 import { useUser } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
+import { ShieldCheck, User as UserIcon } from "lucide-react";
 
 const DashboardPage = () => {
   const { user } = useUser();
@@ -59,9 +61,36 @@ const DashboardPage = () => {
   return (
     <main className="mt-4 pb-12">
       {/* Header Section */}
-      <div className="mb-4">
-        <h1 className="text-4xl font-bold text-foreground">{user?.firstName}'s House</h1>
-        <p className="text-muted-foreground mt-2">Welcome back to your Solar Energy Production Dashboard</p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-bold text-foreground">{user?.firstName}'s House</h1>
+          <p className="text-muted-foreground mt-2">Welcome back to your Solar Energy Production Dashboard</p>
+        </div>
+
+        {/* Role Selection UI */}
+        <div className="flex gap-4">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3 px-6 py-3 bg-primary text-primary-foreground rounded-xl shadow-lg border-2 border-primary transition-all hover:scale-105"
+          >
+            <UserIcon size={20} />
+            <div className="text-left">
+              <div className="text-xs opacity-80 font-medium">Viewing as</div>
+              <div className="font-bold">User</div>
+            </div>
+          </Link>
+
+          <Link
+            to="/dashboard/admin"
+            className="flex items-center gap-3 px-6 py-3 bg-card text-card-foreground rounded-xl shadow-md border-2 border-transparent transition-all hover:border-orange-500 hover:scale-105"
+          >
+            <ShieldCheck size={20} className="text-orange-500" />
+            <div className="text-left">
+              <div className="text-xs text-muted-foreground font-medium">Switch to</div>
+              <div className="font-bold">Admin Portal</div>
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Main Content Grid - Weather and Charts */}

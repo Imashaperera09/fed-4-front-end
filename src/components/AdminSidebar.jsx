@@ -1,4 +1,4 @@
-import { Settings, Zap, Receipt, TriangleAlert } from "lucide-react";
+import { Settings, Zap, Receipt, TriangleAlert, ArrowLeft } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -33,6 +33,11 @@ const items = [
     title: "Settings",
     url: "/dashboard/admin/settings",
     icon: <Settings className="w-8 h-8" size={32} />,
+  },
+  {
+    title: "Back to User View",
+    url: "/dashboard",
+    icon: <ArrowLeft className="w-8 h-8" size={32} />,
   },
 ];
 
