@@ -18,7 +18,7 @@ export default function CheckoutForm({ invoiceId }) {
         const token = await getToken();
 
         const response = await fetch(
-            "http://localhost:8000/api/payments/create-checkout-session",
+            `${import.meta.env.VITE_API_URL}/payments/create-checkout-session`,
             {
                 method: "POST",
                 headers: {
