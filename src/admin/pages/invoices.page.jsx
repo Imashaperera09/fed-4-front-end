@@ -31,7 +31,7 @@ const AdminInvoicesPage = () => {
 
     const getUserName = (userId) => {
         if (!users) return userId;
-        const user = users.find((u) => u._id === userId || u.clerkId === userId);
+        const user = users.find((u) => u._id === userId || u.clerkUserId === userId);
         return user ? `${user.firstName} ${user.lastName}` : "Unknown User";
     };
 
