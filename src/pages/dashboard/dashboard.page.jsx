@@ -11,7 +11,7 @@ import WeatherConditions from "./components/WeatherConditions";
 import CapacityFactorChart from "./components/CapacityFactorChart";
 import { useUser } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
-import { ShieldCheck, User as UserIcon } from "lucide-react";
+import { ShieldCheck, User as UserIcon, TriangleAlert } from "lucide-react";
 
 const DashboardPage = () => {
   const { user } = useUser();
@@ -50,14 +50,6 @@ const DashboardPage = () => {
     isError: isCapacityError
   } = useGetCapacityFactorQuery(solarUnitId, { skip: !solarUnitId });
 
-  if (isUnitLoading) return <div className="p-8 text-center">Loading your solar unit...</div>;
-  if (isUnitError || !solarUnit) return (
-    <div className="p-8 text-center text-red-500">
-      Error: Could not find a solar unit for your account.
-      Please ensure your unit is correctly linked.
-    </div>
-  );
-
   return (
     <main className="mt-4 pb-12">
       {/* Header Section */}
@@ -93,50 +85,63 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Main Content Grid - Weather and Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Solar Energy Production */}
-        <div className="lg:col-span-2 space-y-6">
-          <SolarEnergyProduction
-            data={data}
-            isLoading={isLoading}
-            isError={isError}
-            detectionMethod={detectionMethod}
-            setDetectionMethod={setDetectionMethod}
-            threshold={threshold}
-            setThreshold={setThreshold}
-            minKwh={minKwh}
-            setMinKwh={setMinKwh}
-          />
+      {isUnitLoading ? (
+        <div className="p-8 text-center">Loading your solar unit...</div>
+      ) : isUnitError || !solarUnit ? (
+        <div className="p-8 text-center text-red-500 bg-card rounded-xl border border-destructive/20">
+          <TriangleAlert className="mx-auto mb-4 text-destructive" size={48} />
+          <h2 className="text-xl font-bold mb-2">Solar Unit Not Found</h2>
+          <p>Could not find a solar unit for your account. Please ensure your unit is correctly linked.</p>
+          <p className="text-sm mt-4 text-muted-foreground">If you are an administrator, you can manage units in the Admin Portal.</p>
         </div>
+      ) : (
+        <>
+          {/* Main Content Grid - Weather and Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Solar Energy Production */}
+            <div className="lg:col-span-2 space-y-6">
+              <SolarEnergyProduction
+                data={data}
+                isLoading={isLoading}
+                isError={isError}
+                detectionMethod={detectionMethod}
+                setDetectionMethod={setDetectionMethod}
+                threshold={threshold}
+                setThreshold={setThreshold}
+                minKwh={minKwh}
+                setMinKwh={setMinKwh}
+              />
+            </div>
 
-        {/* Right Column - Weather Widget and Capacity Factor */}
-        <div className="space-y-6">
-          <WeatherConditions
-            weatherData={weatherData}
-            isLoading={isWeatherLoading}
-            isError={isWeatherError}
-          />
-          <CapacityFactorChart
-            data={capacityFactorData}
-            isLoading={isCapacityLoading}
-            isError={isCapacityError}
-          />
-        </div>
-      </div>
+            {/* Right Column - Weather Widget and Capacity Factor */}
+            <div className="space-y-6">
+              <WeatherConditions
+                weatherData={weatherData}
+                isLoading={isWeatherLoading}
+                isError={isWeatherError}
+              />
+              <CapacityFactorChart
+                data={capacityFactorData}
+                isLoading={isCapacityLoading}
+                isError={isCapacityError}
+              />
+            </div>
+          </div>
 
-      {/* Energy Production Chart - Full Width */}
-      <div className="mt-8">
-        <DataChart
-          data={data}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
-          detectionMethod={detectionMethod}
-          threshold={threshold}
-          minKwh={minKwh}
-        />
-      </div>
+          {/* Energy Production Chart - Full Width */}
+          <div className="mt-8">
+            <DataChart
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
+              error={error}
+              detectionMethod={detectionMethod}
+              threshold={threshold}
+              minKwh={minKwh}
+            />
+          </div>
+        </>
+      )}
     </main>
   );
 };
