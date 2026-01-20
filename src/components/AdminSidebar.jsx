@@ -34,11 +34,6 @@ const items = [
     url: "/dashboard/admin/settings",
     icon: <Settings className="w-8 h-8" size={32} />,
   },
-  {
-    title: "Back to User View",
-    url: "/dashboard",
-    icon: <ArrowLeft className="w-8 h-8" size={32} />,
-  },
 ];
 
 const AdminSideBarTab = ({ item }) => {

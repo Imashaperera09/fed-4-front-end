@@ -27,17 +27,21 @@ export const api = createApi({
   endpoints: (build) => ({
     getEnergyGenerationRecordsBySolarUnit: build.query({
       query: ({ id, groupBy, limit }) => `/energy-generation-records/solar-unit/${id}?groupBy=${groupBy}&limit=${limit}`,
+      pollingInterval: 30000, // 30 seconds
     }),
     getSolarUnitForUser: build.query({
       query: () => `/solar-units/me`,
+      pollingInterval: 60000, // 1 minute
     }),
     getSolarUnits: build.query({
       query: () => `/solar-units`,
       providesTags: ["SolarUnit"],
+      pollingInterval: 60000,
     }),
     getSolarUnitById: build.query({
       query: (id) => `/solar-units/${id}`,
       providesTags: (result, error, id) => [{ type: "SolarUnit", id }],
+      pollingInterval: 60000,
     }),
     createSolarUnit: build.mutation({
       query: (data) => ({
@@ -67,13 +71,16 @@ export const api = createApi({
     }),
     getWeatherData: build.query({
       query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`,
+      pollingInterval: 300000, // 5 minutes
     }),
     getCapacityFactor: build.query({
       query: (id) => `/energy-generation-records/capacity-factor/${id}`,
+      pollingInterval: 60000,
     }),
     getInvoices: build.query({
       query: (userId) => userId ? `/invoices?userId=${userId}` : `/invoices`,
       providesTags: ["Invoice"],
+      pollingInterval: 60000,
     }),
     createPaymentIntent: build.mutation({
       query: (data) => ({
@@ -110,10 +117,12 @@ export const api = createApi({
     getAnomalies: build.query({
       query: () => `/anomalies`,
       providesTags: ["Anomaly"],
+      pollingInterval: 30000,
     }),
     getAnomaliesForUser: build.query({
       query: () => `/anomalies/user`,
       providesTags: ["Anomaly"],
+      pollingInterval: 30000,
     }),
     resolveAnomaly: build.mutation({
       query: (id) => ({

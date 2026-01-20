@@ -148,7 +148,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                                         <FormLabel>Status</FormLabel>
                                         <FormControl>
                                             <Select value={field.value || ""} onValueChange={field.onChange}>
-                                                <SelectTrigger className="bg-background/50">
+                                                <SelectTrigger className="w-full bg-background/50">
                                                     <SelectValue placeholder="Select Status" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -166,7 +166,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                                 control={form.control}
                                 name="userId"
                                 render={({ field }) => (
-                                    <FormItem className="md:col-span-2">
+                                    <FormItem>
                                         <FormLabel>Assigned User</FormLabel>
                                         <FormControl>
                                             <Select
@@ -176,7 +176,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                                                     setIsCustomEmail(val === "custom");
                                                 }}
                                             >
-                                                <SelectTrigger className="bg-background/50">
+                                                <SelectTrigger className="w-full bg-background/50">
                                                     <SelectValue placeholder="Select User" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -197,7 +197,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                                     control={form.control}
                                     name="userEmail"
                                     render={({ field }) => (
-                                        <FormItem className="md:col-span-2">
+                                        <FormItem>
                                             <FormLabel>New User Email</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Enter email address" {...field} className="bg-background/50" />

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useCreateSolarUnitMutation } from "@/lib/redux/query"
+import { useCreateSolarUnitMutation, useGetAllUsersQuery } from "@/lib/redux/query"
 import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useState } from "react"
@@ -22,11 +22,23 @@ const formSchema = z.object({
     installationDate: z.string().min(1, { message: "Installation date is required" }),
     capacity: z.number().positive({ message: "Capacity must be a positive number" }),
     status: z.enum(["ACTIVE", "INACTIVE", "MAINTENANCE"], { message: "Please select a valid status" }),
+    userId: z.string().optional(),
+    userEmail: z.string().email({ message: "Invalid email address" }).optional().or(z.literal("")),
+}).refine((data) => {
+    if (data.userId === "custom" && (!data.userEmail || data.userEmail.trim() === "")) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Email is required for custom assignment",
+    path: ["userEmail"],
 });
 
 export function CreateSolarUnitForm() {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [isCustomEmail, setIsCustomEmail] = useState(false);
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -34,15 +46,23 @@ export function CreateSolarUnitForm() {
             installationDate: new Date().toISOString().split('T')[0],
             capacity: 0,
             status: "ACTIVE",
+            userId: "none",
+            userEmail: "",
         }
     })
 
     const [createSolarUnit, { isLoading: isCreatingSolarUnit }] = useCreateSolarUnitMutation();
+    const { data: users } = useGetAllUsersQuery();
 
     async function onSubmit(values) {
         try {
             setError(null);
-            await createSolarUnit(values).unwrap();
+            const submissionData = {
+                ...values,
+                userId: values.userId === "none" || values.userId === "custom" ? null : values.userId,
+                userEmail: values.userId === "custom" ? values.userEmail : null
+            };
+            await createSolarUnit(submissionData).unwrap();
             navigate("/dashboard/admin/solar-units");
         } catch (err) {
             console.error(err);
@@ -112,7 +132,7 @@ export function CreateSolarUnitForm() {
                                         <FormLabel>Initial Status</FormLabel>
                                         <FormControl>
                                             <Select value={field.value || ""} onValueChange={field.onChange}>
-                                                <SelectTrigger className="bg-background/50">
+                                                <SelectTrigger className="w-full bg-background/50">
                                                     <SelectValue placeholder="Select Status" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -126,6 +146,51 @@ export function CreateSolarUnitForm() {
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="userId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Assigned User</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                value={field.value || ""}
+                                                onValueChange={(val) => {
+                                                    field.onChange(val);
+                                                    setIsCustomEmail(val === "custom");
+                                                }}
+                                            >
+                                                <SelectTrigger className="w-full bg-background/50">
+                                                    <SelectValue placeholder="Select User" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="none">No User Assigned</SelectItem>
+                                                    {users?.map((user) => (
+                                                        <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
+                                                    ))}
+                                                    <SelectItem value="custom">+ Add New Email...</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {isCustomEmail && (
+                                <FormField
+                                    control={form.control}
+                                    name="userEmail"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>New User Email</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter email address" {...field} className="bg-background/50" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
                         </div>
                         <div className="flex justify-end gap-4 pt-4">
                             <Button type="button" variant="outline" onClick={() => navigate("/dashboard/admin/solar-units")} disabled={isCreatingSolarUnit}>
