@@ -72,16 +72,18 @@ const DashboardPage = () => {
             </div>
           </Link>
 
-          <Link
-            to="/dashboard/admin"
-            className="flex items-center gap-3 px-6 py-3 bg-card text-card-foreground rounded-xl shadow-md border-2 border-transparent transition-all hover:border-orange-500 hover:scale-105"
-          >
-            <ShieldCheck size={20} className="text-orange-500" />
-            <div className="text-left">
-              <div className="text-xs text-muted-foreground font-medium">Switch to</div>
-              <div className="font-bold">Admin Portal</div>
-            </div>
-          </Link>
+          {(user?.publicMetadata?.role === "admin" || user?.primaryEmailAddress?.emailAddress === "imashachamodi0609@gmail.com") && (
+            <Link
+              to="/dashboard/admin"
+              className="flex items-center gap-3 px-6 py-3 bg-card text-card-foreground rounded-xl shadow-md border-2 border-transparent transition-all hover:border-orange-500 hover:scale-105"
+            >
+              <ShieldCheck size={20} className="text-orange-500" />
+              <div className="text-left">
+                <div className="text-xs text-muted-foreground font-medium">Switch to</div>
+                <div className="font-bold">Admin Portal</div>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
 

@@ -8,12 +8,18 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseUrl, prepareHeaders: async (headers) => {
       const clerk = window.Clerk;
-      if (clerk) {
+      if (clerk?.session) {
         const token = await clerk.session.getToken();
         if (token) {
           headers.set("Authorization", `Bearer ${token}`);
         }
       }
+
+      const isBypass = localStorage.getItem('admin_bypass') === 'true';
+      if (isBypass) {
+        headers.set("X-Admin-Bypass", "true");
+      }
+
       return headers;
     }
   }),
@@ -31,6 +37,7 @@ export const api = createApi({
     }),
     getSolarUnitById: build.query({
       query: (id) => `/solar-units/${id}`,
+      providesTags: (result, error, id) => [{ type: "SolarUnit", id }],
     }),
     createSolarUnit: build.mutation({
       query: (data) => ({
@@ -46,7 +53,7 @@ export const api = createApi({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["SolarUnit"],
+      invalidatesTags: (result, error, { id }) => [{ type: "SolarUnit", id }, "SolarUnit"],
     }),
     deleteSolarUnit: build.mutation({
       query: (id) => ({

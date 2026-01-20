@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useEditSolarUnitMutation, useGetAllUsersQuery } from "@/lib/redux/query"
 import { useParams, useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const formSchema = z.object({
     serialNumber: z.string().min(1, { message: "Serial number is required" }),
@@ -27,12 +27,23 @@ const formSchema = z.object({
     }, z.number().positive({ message: "Capacity must be a positive number" })),
     status: z.enum(["ACTIVE", "INACTIVE", "MAINTENANCE"], { message: "Please select a valid status" }),
     userId: z.string().optional(),
+    userEmail: z.string().email({ message: "Invalid email address" }).optional().or(z.literal("")),
+}).refine((data) => {
+    if (data.userId === "custom" && (!data.userEmail || data.userEmail.trim() === "")) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Email is required for custom assignment",
+    path: ["userEmail"],
 });
 
 export function EditSolarUnitForm({ solarUnit }) {
+    console.log("EditSolarUnitForm received solarUnit:", solarUnit);
     const { id } = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [isCustomEmail, setIsCustomEmail] = useState(false);
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -42,20 +53,32 @@ export function EditSolarUnitForm({ solarUnit }) {
             capacity: solarUnit.capacity,
             status: solarUnit.status,
             userId: solarUnit.userId || "none",
+            userEmail: "",
         },
     })
 
     const [editSolarUnit, { isLoading: isEditingSolarUnit }] = useEditSolarUnitMutation();
     const { data: users } = useGetAllUsersQuery();
 
+    useEffect(() => {
+        const subscription = form.watch((value, { name, type }) =>
+            console.log("Form changed:", name, value)
+        );
+        return () => subscription.unsubscribe();
+    }, [form]);
+
     async function onSubmit(values) {
         try {
             setError(null);
+            console.log("Form Values:", values);
             const submissionData = {
                 ...values,
-                userId: values.userId === "none" ? null : values.userId
+                userId: values.userId === "none" || values.userId === "custom" ? null : values.userId,
+                userEmail: values.userId === "custom" ? values.userEmail : null
             };
+            console.log("Submission Data:", submissionData);
             await editSolarUnit({ id, data: submissionData }).unwrap();
+            console.log("Update Success Result: DONE");
             navigate(`/dashboard/admin/solar-units/${id}`);
         } catch (err) {
             console.error(err);
@@ -146,7 +169,13 @@ export function EditSolarUnitForm({ solarUnit }) {
                                     <FormItem className="md:col-span-2">
                                         <FormLabel>Assigned User</FormLabel>
                                         <FormControl>
-                                            <Select value={field.value || ""} onValueChange={field.onChange}>
+                                            <Select
+                                                value={field.value || ""}
+                                                onValueChange={(val) => {
+                                                    field.onChange(val);
+                                                    setIsCustomEmail(val === "custom");
+                                                }}
+                                            >
                                                 <SelectTrigger className="bg-background/50">
                                                     <SelectValue placeholder="Select User" />
                                                 </SelectTrigger>
@@ -155,6 +184,7 @@ export function EditSolarUnitForm({ solarUnit }) {
                                                     {users?.map((user) => (
                                                         <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
                                                     ))}
+                                                    <SelectItem value="custom">+ Add New Email...</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
@@ -162,6 +192,21 @@ export function EditSolarUnitForm({ solarUnit }) {
                                     </FormItem>
                                 )}
                             />
+                            {isCustomEmail && (
+                                <FormField
+                                    control={form.control}
+                                    name="userEmail"
+                                    render={({ field }) => (
+                                        <FormItem className="md:col-span-2">
+                                            <FormLabel>New User Email</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter email address" {...field} className="bg-background/50" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
                         </div>
                         <div className="flex justify-end gap-4 pt-4">
                             <Button type="button" variant="outline" onClick={() => navigate(`/dashboard/admin/solar-units/${id}`)} disabled={isEditingSolarUnit}>

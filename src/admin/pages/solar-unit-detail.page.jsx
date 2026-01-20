@@ -154,9 +154,11 @@ export default function SolarUnitDetailPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">User ID</p>
-                    <p className="text-sm font-mono text-muted-foreground bg-background/50 p-2 rounded border border-border/50 break-all">
-                      {solarUnit.userId ?? "No User Assigned"}
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Assigned User</p>
+                    <p className="text-sm font-semibold text-foreground bg-background/50 p-2 rounded border border-border/50 break-all">
+                      {typeof solarUnit.userId === 'object' && solarUnit.userId !== null
+                        ? solarUnit.userId.email
+                        : (solarUnit.userId ?? "No User Assigned")}
                     </p>
                   </div>
                 </div>
