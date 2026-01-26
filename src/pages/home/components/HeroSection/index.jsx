@@ -2,8 +2,10 @@ import imgWindTurbine from "./wind-turbine.png";
 import { Sailboat, Shield, Triangle, Wind } from "lucide-react";
 import EnergyProductionCard from "../EnergyProductionCard";
 import { useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 export default function HeroSection() {
+  const { isSignedIn } = useUser();
   // Energy production data
   const energyProductionData = [
     { day: "Mon", date: "Aug 18", production: "34.1", hasAnomaly: false },
@@ -104,26 +106,28 @@ export default function HeroSection() {
               </div>
 
               {/* Filter Buttons */}
-              <div className="mt-4 flex items-center gap-x-4">
-                <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${selectedTab === "all"
+              {isSignedIn && (
+                <div className="mt-4 flex items-center gap-x-4">
+                  <button
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${selectedTab === "all"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    }`}
-                  onClick={() => setSelectedTab("all")}
-                >
-                  All
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${selectedTab === "anomaly"
+                      }`}
+                    onClick={() => setSelectedTab("all")}
+                  >
+                    All
+                  </button>
+                  <button
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${selectedTab === "anomaly"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    }`}
-                  onClick={() => setSelectedTab("anomaly")}
-                >
-                  Anomaly
-                </button>
-              </div>
+                      }`}
+                    onClick={() => setSelectedTab("anomaly")}
+                  >
+                    Anomaly
+                  </button>
+                </div>
+              )}
 
               {/* Energy Production Cards */}
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
@@ -132,8 +136,8 @@ export default function HeroSection() {
                     key={el.date}
                     day={el.day}
                     date={el.date}
-                    production={el.production}
-                    hasAnomaly={el.hasAnomaly}
+                    production={isSignedIn ? el.production : "0"}
+                    hasAnomaly={isSignedIn ? el.hasAnomaly : false}
                   />
                 ))}
               </div>
