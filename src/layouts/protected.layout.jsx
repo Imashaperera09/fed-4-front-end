@@ -7,10 +7,7 @@ export default function ProtectedLayout() {
     if (!isLoaded) return null;
 
     if (!isSignedIn) {
-        const isBypass = localStorage.getItem('admin_bypass') === 'true';
-        if (!isBypass) {
-            return <Navigate to="/sign-in" />;
-        }
+        return <Navigate to="/sign-in" />;
     }
 
     return <Outlet />;
