@@ -1,5 +1,11 @@
 # SolarNova Frontend
 
+## 🔗 Related Repositories
+
+- [FED-4-BACK-END](https://github.com/Imashaperera09/FED-4-BACK-END)
+- [Dataapi](https://github.com/Imashaperera09/Dataapi)
+- [fed-4-front-end](https://github.com/Imashaperera09/fed-4-front-end)
+
 SolarNova is a modern web application designed for monitoring and managing home solar energy systems. It provides real-time insights into energy production, detects anomalies, and manages billing and invoices.
 
 ## 🚀 Features
