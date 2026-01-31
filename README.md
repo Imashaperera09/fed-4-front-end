@@ -1,10 +1,14 @@
 # SolarNova Frontend
 
-## 🔗 Related Repositories
+## 🔗 Links & Repositories
 
-- [FED-4-BACK-END](https://github.com/Imashaperera09/FED-4-BACK-END)
-- [Dataapi](https://github.com/Imashaperera09/Dataapi)
-- [fed-4-front-end](https://github.com/Imashaperera09/fed-4-front-end)
+### 🌐 Live Demo
+- **Frontend (Vercel)**: [https://fed-4-front-end.vercel.app/](https://fed-4-front-end.vercel.app/)
+- **Backend API (Render)**: [https://fed-4-back-end.onrender.com](https://fed-4-back-end.onrender.com)
+
+### 📂 Source Code
+- **Frontend Repository**: [https://github.com/Imashaperera09/fed-4-front-end](https://github.com/Imashaperera09/fed-4-front-end)
+- **Backend Repository**: [https://github.com/Imashaperera09/FED-4-BACK-END](https://github.com/Imashaperera09/FED-4-BACK-END)
 
 SolarNova is a modern web application designed for monitoring and managing home solar energy systems. It provides real-time insights into energy production, detects anomalies, and manages billing and invoices.
 
@@ -16,6 +20,7 @@ SolarNova is a modern web application designed for monitoring and managing home 
 - **User Dashboard**: Personalized view of your energy system's performance.
 - **Admin Portal**: Comprehensive tools for managing solar units, users, and system settings.
 - **Responsive Design**: Fully optimized for desktop and mobile devices.
+
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
@@ -44,6 +49,23 @@ SolarNova is a modern web application designed for monitoring and managing home 
 
 ### 💳 Invoices & Billing
 ![Invoices](public/assests/screenshots/invoices.png)
+
+## 🛡️ Admin Portal
+
+### 🏢 Solar Unit Management
+![Admin Solar Units](public/assests/screenshots/admin-solar-units.png)
+
+### ⚙️ Unit Configuration & Actions
+![Admin Unit Details](public/assests/screenshots/admin-unit-details.png)
+
+### 🧾 Global Invoice Management
+![Admin All Invoices](public/assests/screenshots/admin-all-invoices.png)
+
+### 🚨 System-Wide Anomaly Tracking
+![Admin System Anomalies](public/assests/screenshots/admin-system-anomalies.png)
+
+### 🛠️ Application Settings
+![Admin Settings](public/assests/screenshots/admin-settings.png)
 
 ## 🛠️ Tech Stack
 
@@ -93,7 +115,10 @@ SolarNova is a modern web application designed for monitoring and managing home 
 - `npm run lint`: Runs ESLint for code quality checks.
 - `npm run preview`: Previews the production build locally.
 
+## 📂 Sample Records
 
+- [Sample Energy Record (MP4)](public/assests/2026-01-31%2011-18-43-71.mp4)  
+  Example of a recorded energy data file used for demo or testing.
 
 ## 🤝 Contributing
 
