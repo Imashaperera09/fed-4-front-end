@@ -65,6 +65,11 @@ SolarNova is a modern web application designed for monitoring and managing home 
 - `npm run lint`: Runs ESLint for code quality checks.
 - `npm run preview`: Previews the production build locally.
 
+## 📂 Sample Records
+
+- [Sample Energy Record (MP4)](public/assests/2026-01-31%2011-18-43-71.mp4)  
+  Example of a recorded energy data file used for demo or testing.
+
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! 
