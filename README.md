@@ -16,6 +16,34 @@ SolarNova is a modern web application designed for monitoring and managing home 
 - **User Dashboard**: Personalized view of your energy system's performance.
 - **Admin Portal**: Comprehensive tools for managing solar units, users, and system settings.
 - **Responsive Design**: Fully optimized for desktop and mobile devices.
+## 📸 Screenshots
+
+### 🏠 Landing Page
+![Landing Page](public/assests/screenshots/landing-page.png)
+
+### 👥 Role Selection
+![Role Selection](public/assests/screenshots/role-selection.png)
+
+### 🔐 Secure Login
+![Login Page](public/assests/screenshots/login.png)
+
+### 📊 Energy Dashboard
+![Dashboard](public/assests/screenshots/dashboard.png)
+
+### 📈 Production Analysis
+![Analysis Chart](public/assests/screenshots/chart.png)
+
+### ⚠️ Anomaly Detection
+![Anomaly Detection](public/assests/screenshots/anomaly-detection.png)
+
+### 📋 Detected Anomalies List
+![Anomaly List](public/assests/screenshots/anomaly-list.png)
+
+### 📊 Analytics Dashboard
+![Analytics](public/assests/screenshots/analytics.png)
+
+### 💳 Invoices & Billing
+![Invoices](public/assests/screenshots/invoices.png)
 
 ## 🛠️ Tech Stack
 
@@ -65,11 +93,8 @@ SolarNova is a modern web application designed for monitoring and managing home 
 - `npm run lint`: Runs ESLint for code quality checks.
 - `npm run preview`: Previews the production build locally.
 
-## 📂 Sample Records
 
-- [Sample Energy Record (MP4)](public/assests/2026-01-31%2011-18-43-71.mp4)  
-  Example of a recorded energy data file used for demo or testing.
 
 ## 🤝 Contributing
 
-Contributions are welcome! 
+Contributions are welcome!
